@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const mongoURI = "mongodb+srv://root:root@cluster0.hycqd.mongodb.net/mern-stack-project?retryWrites=true&w=majority";
+const config = require("config")
+const mongoURI = config.get("mongoURI")
 
 const connectToMongo = ()=> {
     mongoose.connect(mongoURI, ()=>{
