@@ -5,7 +5,7 @@ const User = require("../../models/User");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require("config")
+const config = require("config");
 
 // @route   POST api/users
 // @desc    Registration route
