@@ -14,12 +14,28 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    mobile:{
+        type: String,
+        required: true
+    },
+    pincode:{
+        type: Number,
+        required: true
+    },
+    address:{
+        type: String,
+        required: true
+    },
     avatar: {
         type: String
     },
     date: {
         type: Date,
         default: Date.now
+    },
+    status: {
+        type: Number,
+        default: "1"
     }
 })
 

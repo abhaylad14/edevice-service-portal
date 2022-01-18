@@ -13,14 +13,17 @@ const config = require("config");
 router.post("/", [
     check("name", "Name is required").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
-    check("password", "Please enter a password with 6 or more characters").isLength({min:8})
+    check("password", "Please enter a password with 6 or more characters").isLength({min:8}),
+    check("mobile", "Mobile number must contains 10 digits").isLength({min:10, max:10}),
+    check("pincode", "Pincode must contains 6 digits").isLength({min:6, max:6}),
+    check("address", "Address is required").not().isEmpty()
 ],async (req,res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
-    const {name, email, password} = req.body;
+    const {name, email, password, mobile, pincode, address} = req.body;
     try{
     // See if user exists
     let user = await User.findOne({email});
@@ -36,7 +39,7 @@ router.post("/", [
     });
 
     user = new User({
-        name, email, avatar, password
+        name, email, avatar, password, mobile, pincode, address
     });
 
     // Encrypt Password
