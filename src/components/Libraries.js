@@ -18,6 +18,13 @@ export const Libraries = () => {
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
             {/* <!-- CSS Files --> */}
             <link id="pagestyle" href="./assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
+            
+            {/* <!--   Core JS Files   --> */}
+            <script src="./assets/js/core/popper.min.js"></script>
+            <script src="./assets/js/core/bootstrap.min.js"></script>
+            <script src="./assets/js/plugins/perfect-scrollbar.min.js"></script>
+            <script src="./assets/js/plugins/smooth-scrollbar.min.js"></script>
+            <script src="./assets/js/plugins/chartjs.min.js"></script>
         </>
     )
 }
