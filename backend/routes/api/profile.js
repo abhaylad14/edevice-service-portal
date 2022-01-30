@@ -38,7 +38,7 @@ router.get("/", auth, async (req, res)=>{
 // @access  Private
 router.get("/:user_id", auth, async (req, res)=>{
     try {
-        const profile = await User.findOne({user: req.params.user_id }).select("-password");
+        const profile = await User.findOne({_id: req.params.user_id }).select("-password");
         if(!profile){
             return res.status(400).json({ msg: "Profile not found"});
         }
@@ -46,7 +46,7 @@ router.get("/:user_id", auth, async (req, res)=>{
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
-            res.status(400).json({ msg: "Profile not found"}); 
+            return res.status(400).json({ msg: "Profile not found"}); 
         }
         res.status(500).send("Server Error");
     }
@@ -57,7 +57,7 @@ router.get("/:user_id", auth, async (req, res)=>{
 // @access  Private
 router.delete("/:user_id", auth, async (req, res)=>{
     try {
-        await User.findOneAndUpdate({user: req.params.user_id}, {$set: {status: 0}});
+        await User.findByIdAndUpdate({_id: req.params.user_id}, {status: 0});
         res.json({msg: "Profile deleted successfully"});
     } catch (err) {
         console.error(err.message);
@@ -73,7 +73,7 @@ router.delete("/:user_id", auth, async (req, res)=>{
 // @access  Private
 router.delete("/restore/:user_id", auth, async (req, res)=>{
     try {
-        await User.findOneAndUpdate({user: req.params.user_id}, {$set: {status: 1}});
+        await User.findByIdAndUpdate({_id: req.params.user_id}, {status: 1});
         res.json({msg: "Profile restored successfully"});
     } catch (err) {
         console.error(err.message);

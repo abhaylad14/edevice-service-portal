@@ -7,6 +7,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
+
+/*
+    Types of users: 
+    Admin       :  0
+    Customer    :  1
+    Deliveryboy :  2
+    Serviceman  :  3
+*/ 
+
 // @route   GET api/auth
 // @desc    Test route
 // @access  Public
@@ -60,7 +69,6 @@ router.post("/", [
         res.json({token});
     })
 
-    // res.send("User registered successfully");
     }catch(err){
         console.error(err);
         res.status(500).send("Server error");
