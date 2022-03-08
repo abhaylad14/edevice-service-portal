@@ -47,6 +47,10 @@ const ComplainSchema = new mongoose.Schema({
         ref: "user",
         required: false
     },
+    estimate:{
+        type: Number,
+        required: false
+    }
 
 });
 
