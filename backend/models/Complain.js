@@ -29,7 +29,7 @@ const ComplainSchema = new mongoose.Schema({
         required: true
     },
     status:{
-        type: String,
+        type: Number,
         default: "0"
     },
     pickupuser:{

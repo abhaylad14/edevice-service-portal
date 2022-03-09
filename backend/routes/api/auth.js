@@ -17,7 +17,7 @@ const config = require("config");
 */ 
 
 // @route   GET api/auth
-// @desc    Test route
+// @desc    Get Logged in User details
 // @access  Public
 router.get("/", auth, async (req,res) => {
     // res.send("Auth route")
@@ -72,6 +72,28 @@ router.post("/", [
     }catch(err){
         console.error(err);
         res.status(500).send("Server error");
+    }
+});
+
+// @route   POST api/auth/forgotpassword
+// @desc    Forgot password route
+// @access  Public
+router.get("/forgotpassword",[
+        check("email", "Please enter a valid email").isEmail()
+], async (req,res) => {
+    // res.send("Auth route")
+    try {
+        const user = await User.findOne({email: req.body.email, status: 1});
+        // res.json(user);
+        if(!user){
+            return res.status(404).json({ errors: [{ msg: "There is no user with this email"}]});
+        }
+        // Get reset token
+        const resetToken = user.getResetPasswordToken();
+        console.log(resetToken);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
     }
 });
 

@@ -258,10 +258,10 @@ router.post("/rejectservice", auth, [
     }
 });
 
-// @route   POST api/complain/updatepickupstatus
-// @desc    Pick up status update route
+// @route   POST api/complain/updatestatus
+// @desc    Pick up and delivery status update route
 // @access  Private
-router.post("/updatepickupstatus", auth, [
+router.post("/updatestatus", auth, [
     check("id", "Complain id is required").not().isEmpty(),
     check("status", "Status is not valid").isNumeric()
 ], async (req,res) => {
