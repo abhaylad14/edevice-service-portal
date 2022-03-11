@@ -6,7 +6,8 @@ const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-
+const sendEmail = require("../../sendEmail");
+const crypto = require("crypto");
 
 /*
     Types of users: 
@@ -81,6 +82,10 @@ router.post("/", [
 router.get("/forgotpassword",[
         check("email", "Please enter a valid email").isEmail()
 ], async (req,res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
     // res.send("Auth route")
     try {
         const user = await User.findOne({email: req.body.email, status: 1});
@@ -91,10 +96,65 @@ router.get("/forgotpassword",[
         // Get reset token
         const resetToken = user.getResetPasswordToken();
         console.log(resetToken);
+
+        await user.save({ valodateBeforeSave: false })
+
+        // Create reset url
+        const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
+        const message = `You are receiving this email because you ( or someone else ) has requested of a reset password. Please make a put request to: \n\n ${resetUrl}`;
+        try {
+             await sendEmail({
+                 email: user.email,
+                 subject: "Password Reset Token",
+                 message 
+             });
+             res.status(200).json({msg: "Email sent successfully!"})
+        } catch (err) {
+            console.log(err);
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpire = undefined;
+            await user.save({validateBeforeSave: false});
+            res.status(500).send("Email could not be sent! Something went wrong!");
+        }
+        // return res.status(200).json({email: user.email,createdAt :user.createdAt, token: user.resetPasswordToken, expire: user.resetPasswordExpire})
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
     }
+});
+
+// @route   PUT api/auth/resetpassword/:resetToken
+// @desc    Reset Password
+// @access  Public
+router.put("/resetpassword/:resetToken", async (req,res) => {
+    // Get hashed token
+    const resetPasswordToken = crypto.createHash('sha256').update(req.params.resetToken).digest('hex');
+    
+    const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: {$gt: Date.now()}
+    });
+    if(!user){
+        return res.status(400).send("Invalid Token");
+    }
+    // Set new Password
+    // Encrypt Password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(req.body.password, salt);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;  
+    await user.save();
+    // Return jsonwebtoken
+    const payload = {
+        user:{
+            id: user.id
+        }
+    }
+    jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 3600},
+    (err,token) => {
+        if(err) throw err;
+        res.json({token});
+    })
 });
 
 module.exports = router;
