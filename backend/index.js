@@ -1,6 +1,10 @@
 const express = require('express')
+var cors = require('cors')
 const app = express()
 const port = 5000
+
+// enable cross origin requests
+app.use(cors())
 
 // database connection
 const connectToMongo = require("./db")
