@@ -3,8 +3,11 @@ import { Navbar } from "./Navbar";
 import { Libraries } from "./Libraries";
 import { Footer } from "./Footer";
 import axios from "axios";
+import { connect } from "react-redux";
+import { setAlert } from '../actions/alert';
+import PropTypes from 'prop-types'
 
-const Registration = () => {
+const Registration = ({ setAlert }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,7 +24,7 @@ const Registration = () => {
   const onSubmit = async(e) => {
     e.preventDefault();
     if(pass1 !== pass2){
-      console.log("Password does not match");
+      setAlert("Password does not match", "danger");
     }
     else{
       const newUser = {
@@ -144,4 +147,8 @@ const Registration = () => {
   );
 };
 
-export default Registration;
+Registration.propTypes = {
+  setAlert:PropTypes.func.isRequired
+};
+
+export default connect(null, { setAlert })(Registration);
