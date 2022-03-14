@@ -18,7 +18,7 @@ const crypto = require("crypto");
 */ 
 
 // @route   GET api/auth
-// @desc    Get Logged in User details
+// @desc    Get Logged in User details 
 // @access  Public
 router.get("/", auth, async (req,res) => {
     // res.send("Auth route")
@@ -32,12 +32,13 @@ router.get("/", auth, async (req,res) => {
 });
 
 // @route   POST api/auth
-// @desc    Authenticate user and get token
+// @desc    Authenticate user and get token (Login)
 // @access  Public
 router.post("/", [
     check("email", "Please enter a valid email").isEmail(),
-    check("password", "Password is required").exists()
+    check("password", "Password is required").not().isEmpty()
 ],async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -67,12 +68,13 @@ router.post("/", [
     jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 360000},
     (err,token) => {
         if(err) throw err;
-        res.json({token});
+        status = true;
+        res.json({status,token});
     })
 
     }catch(err){
         console.error(err);
-        res.status(500).send("Server error");
+        res.status(500).json({errors: [{ msg: "Internal Server Error"}]});
     }
 });
 

@@ -8,8 +8,10 @@ import { setAlert } from '../actions/alert';
 import PropTypes from 'prop-types'
 import alertify from 'alertifyjs';
 import 'alertifyjs/build/css/alertify.css';
+import { useNavigate } from "react-router-dom";
 
 const Registration = ({ setAlert }) => {
+  let navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -45,9 +47,16 @@ const Registration = ({ setAlert }) => {
           }
         }
         const res = await axios.post("http://localhost:5000/api/users", newUser, config);
-        console.log(res.data);
+        if(res.data.status){
+          alertify.success("Success: User has been registered successfully!");
+          navigate("/login");
+        }
+        else{
+          alertify.error("Error: Something went wrong!");
+        }
       } catch (err) {
-        console.log(err.response.data);
+        alertify.error(err.response.data['errors'][0].msg);
+      // console.log(err.response.data['errors'][0].status);
       }
     }
   }
@@ -89,6 +98,8 @@ const Registration = ({ setAlert }) => {
                 className="form-control border border-secondary px-3 mb-2"
                 required
                 onChange={e => onChange(e)}
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
               />
               <label htmlFor="pass2">Confirm Password</label>
               <input
@@ -99,6 +110,8 @@ const Registration = ({ setAlert }) => {
                 className="form-control border border-secondary px-3 mb-2"
                 required
                 onChange={e => onChange(e)}
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+                title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
               />
               <label htmlFor="mobile">Mobile</label>
               <input

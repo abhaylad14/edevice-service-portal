@@ -36,7 +36,7 @@ const UserSchema = new mongoose.Schema({
     },
     status: {
         type: Number,
-        default: "1"
+        required: true
     },
     usertype: {
         type: Number,

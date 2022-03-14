@@ -19,6 +19,7 @@ router.post("/", [
     check("pincode", "Pincode must contains 6 digits").isLength({min:6, max:6}),
     check("address", "Address is required").not().isEmpty()
 ],async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -40,7 +41,7 @@ router.post("/", [
     });
 
     user = new User({
-        name, email, avatar, password, mobile, pincode, address
+        name, email, avatar, password, mobile, pincode, address, status: 2
     });
 
     // Encrypt Password
@@ -57,13 +58,14 @@ router.post("/", [
     jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 360000},
     (err,token) => {
         if(err) throw err;
-        res.json({token});
+        status = true;
+        res.json({status, token});
     })
 
     // res.send("User registered successfully");
     }catch(err){
         console.error(err);
-        res.status(500).send("Server error");
+        return res.status(500).json({ errors: [{ msg: "Internal Server Error"}]});
     }
 });
 

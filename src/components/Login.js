@@ -27,10 +27,15 @@ const Login = () => {
         }
       }
       const res = await axios.post("http://localhost:5000/api/auth", data, config);
-      alertify.success("Login success")
+      if(res.data.status){
+        alertify.success("Login success: Welcome");
+      }
+      else{
+        alertify.error("Error: Something went wrong!");
+      }
     } catch (err) {
       alertify.error(err.response.data['errors'][0].msg);
-      console.log(err.response.data['errors'][0].msg);
+      // console.log(err.response.data['errors'][0].status);
     }
   }
 
@@ -56,7 +61,8 @@ const Login = () => {
                     <input name='email' type="email" onChange={e => onChange(e)} value={email} className="form-control" placeholder='Email' required/>
                   </div>
                   <div className="input-group input-group-outline mb-3">
-                    <input name='password' type="password" onChange={e => onChange(e)} value={password} className="form-control" placeholder='Password' required />
+                    <input name='password' type="password" onChange={e => onChange(e)} value={password} className="form-control" placeholder='Password' required
+                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
                   </div>
                   <div className='d-flex justify-content-end text-xs'>
                     <Link to="forgotpassword"  >Forgot Password?</Link>

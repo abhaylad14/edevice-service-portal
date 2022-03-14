@@ -13,6 +13,7 @@ import Alert from './components/Alert';
 // Redux 
 import store from './store';
 import { Provider } from 'react-redux';
+import VerifyAccount from './components/VerifyAccount';
 
 const App = () => {
   return (
@@ -24,7 +25,7 @@ const App = () => {
         <Route exact path='/' element={<Home />} />
         <Route exact path='/registration' element={<Registration />}/>
         <Route exact path='/login' element={<Login />}/>
-        
+        <Route exact path='/verifyaccount' element={<VerifyAccount />}/>
     </Routes>
     </>
     </BrowserRouter>
