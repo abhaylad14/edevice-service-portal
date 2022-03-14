@@ -9,6 +9,7 @@ import Home from './components/Home';
 import Registration  from './components/Registration';
 import Login from './components/Login';
 import Alert from './components/Alert';
+
 // Redux 
 import store from './store';
 import { Provider } from 'react-redux';

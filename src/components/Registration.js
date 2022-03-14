@@ -6,6 +6,8 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { setAlert } from '../actions/alert';
 import PropTypes from 'prop-types'
+import alertify from 'alertifyjs';
+import 'alertifyjs/build/css/alertify.css';
 
 const Registration = ({ setAlert }) => {
   const [formData, setFormData] = useState({
@@ -24,7 +26,8 @@ const Registration = ({ setAlert }) => {
   const onSubmit = async(e) => {
     e.preventDefault();
     if(pass1 !== pass2){
-      setAlert("Password does not match", "danger");
+      // setAlert("Error: Password does not match", "danger");
+      alertify.error('<strong>Error</strong>: Password does not match');
     }
     else{
       const newUser = {
