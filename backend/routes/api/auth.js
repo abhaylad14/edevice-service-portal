@@ -47,7 +47,7 @@ router.post("/", [
     const {email, password} = req.body;
     try{
     // See if user exists
-    let user = await User.findOne({email: email, status: 1});
+    let user = await User.findOne({email: email, $or:[{status: 1}, {status: 2}]});
     if(!user){
         return res.status(400).json({ errors: [{ msg: "Invalid Credentials!"}]});
     }
@@ -65,13 +65,38 @@ router.post("/", [
             id: user.id
         }
     }
-    jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 360000},
-    (err,token) => {
+    if(user.status == 1){
+        status = true;
+        jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 360000},
+        (err,token) => {
         if(err) throw err;
         status = true;
         res.json({status,token});
     })
+    }
+    else if(user.status == 2){
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        const message = `Your OTP for verification is: ${otp}.`;
+        try {
+             await sendEmail({
+                 email: user.email,
+                 subject: "Verify account",
+                 message 
+             });
+             user.resetPasswordToken = otp;
+             user.createdAt = Date.now();
+             user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+             await user.save({validateBeforeSave: false});
+             res.status(200).json({status, msg: "Please verify your account"});
+        } catch (err) {
+            console.log(err);
+            user.resetPasswordToken = undefined;
+            user.resetPasswordExpire = undefined;
+            await user.save({validateBeforeSave: false});
+            res.status(500).json({msg: "Email could not be sent! Something went wrong!"});
+        }
 
+    }
     }catch(err){
         console.error(err);
         res.status(500).json({errors: [{ msg: "Internal Server Error"}]});
@@ -99,7 +124,7 @@ router.get("/forgotpassword",[
         const resetToken = user.getResetPasswordToken();
         console.log(resetToken);
 
-        await user.save({ valodateBeforeSave: false })
+        await user.save({ validateBeforeSave: false })
 
         // Create reset url
         const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
@@ -159,4 +184,43 @@ router.put("/resetpassword/:resetToken", async (req,res) => {
     })
 });
 
+// @route   POST api/auth/verifyotp
+// @desc    Verifies the otp for an account
+// @access  Public
+router.post("/verifyotp",[
+    check("email", "Invalid Email").isEmail(),
+    check("otp", "OTP is required").not().isEmpty(),
+    check("otp", "OTP is invalid").isNumeric()
+], async (req,res) => {
+    console.log(req.body);
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    try {
+        const user = await User.findOne({email: req.body.email, resetPasswordToken: req.body.otp, resetPasswordExpire: {$gt: Date.now()}});
+        if(!user){
+            return res.status(400).json({ errors: [{ msg: "OTP has been expired!"}]});
+        }
+        user.resetPasswordExpire = undefined;
+        user.resetPasswordToken = undefined;
+        await user.save({validateBeforeSave: false});
+        // Return jsonwebtoken
+    const payload = {
+        user:{
+            id: user.id
+        }
+    }
+        jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 36000},
+    (err,token) => {
+        if(err) throw err;
+        status = true;
+        return res.status(200).json({status,token});
+    })
+    } catch (err) {
+        console.error(err.message);
+        return res.status(500).json({errors: [{ msg: "Internal Server Error"}]});
+    }
+});
 module.exports = router;

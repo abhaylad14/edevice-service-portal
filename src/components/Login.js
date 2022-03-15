@@ -6,8 +6,10 @@ import { Navbar } from './Navbar'
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
+  let navigate = useNavigate();
   const [ formData, setFormData ] = useState({
     email: "",
     password: ""
@@ -20,6 +22,7 @@ const Login = () => {
       email,
       password
     }
+    setFormData({email: "", password : ""});
     try {
       const config = {
         header:{
@@ -27,8 +30,13 @@ const Login = () => {
         }
       }
       const res = await axios.post("http://localhost:5000/api/auth", data, config);
-      if(res.data.status){
+      if(res.data.status === true){
         alertify.success("Login success: Welcome");
+      }
+      else if(res.data.status === false){
+        alertify.success(res.data.msg);
+        localStorage.setItem("email", email);  
+        navigate("/verifyaccount");
       }
       else{
         alertify.error("Error: Something went wrong!");
