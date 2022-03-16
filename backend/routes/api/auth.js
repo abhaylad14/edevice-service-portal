@@ -203,9 +203,7 @@ router.post("/verifyotp",[
         if(!user){
             return res.status(400).json({ errors: [{ msg: "OTP has been expired!"}]});
         }
-        user.resetPasswordExpire = undefined;
-        user.resetPasswordToken = undefined;
-        await user.save({validateBeforeSave: false});
+
         // Return jsonwebtoken
     const payload = {
         user:{
@@ -213,9 +211,13 @@ router.post("/verifyotp",[
         }
     }
         jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 36000},
-    (err,token) => {
+    async (err,token) => {
         if(err) throw err;
         status = true;
+        user.resetPasswordExpire = undefined;
+        user.resetPasswordToken = undefined;
+        user.status = 1
+        await user.save({validateBeforeSave: false});
         return res.status(200).json({status,token});
     })
     } catch (err) {
