@@ -11,8 +11,8 @@ export const Footer = () => {
                 © {new Date().getFullYear()},
                 made by
                 <a href="https://dev.to/abhaylad14" rel="noreferrer" className="font-weight-bold" target="_blank"> Abhay Lad, </a>
-                <a href="/" rel="noreferrer" className="font-weight-bold" target="_blank"> Priya Kanabar, </a>
-                <a href="/" rel="noreferrer" className="font-weight-bold" target="_blank"> Shrey Patel </a>
+                {/* <a href="/" rel="noreferrer" className="font-weight-bold" target="_blank"> Priya Kanabar, </a>
+                <a href="/" rel="noreferrer" className="font-weight-bold" target="_blank"> Shrey Patel </a> */}
 
               </div>
             </div>

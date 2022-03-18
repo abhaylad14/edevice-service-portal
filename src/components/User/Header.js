@@ -1,16 +1,15 @@
 import React from 'react';
-import { Libraries} from '../Libraries';
+import { Link } from 'react-router-dom';
 export const Header = () => {
     return (
         <>
-            <Libraries />
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
     <div className="sidenav-header">
       <i className="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a className="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
-        <img src="./assets/img/logo-ct.png" className="navbar-brand-img h-100" alt="main_logo" />
-        <span className="ms-1 font-weight-bold text-white">Material Dashboard 2</span>
-      </a>
+      <Link className="navbar-brand m-0" to="/user/dashboard">
+        <img src={process.env.PUBLIC_URL +"/minilogo.png"} className="navbar-brand-img h-100" alt="main_logo" />
+        <span className="ms-1 font-weight-bold text-white"> E-Serve</span>
+      </Link>
     </div>
     <hr className="horizontal light mt-0 mb-2" />
     <div cssstyle="{{height: fit-content}}" className="collapse navbar-collapse overflow-hidden w-auto" id="sidenav-collapse-main">

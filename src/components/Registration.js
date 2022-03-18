@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Navbar } from "./Navbar";
-import { Libraries } from "./Libraries";
 import { Footer } from "./Footer";
 import axios from "axios";
 import { connect } from "react-redux";
@@ -62,7 +61,6 @@ const Registration = ({ setAlert }) => {
   }
   return (
     <>
-      <Libraries />
       <Navbar />
       <div className="container" style={{ marginTop: 95 }}>
         <div className="card">

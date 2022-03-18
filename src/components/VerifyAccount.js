@@ -1,6 +1,5 @@
 import React from 'react'
 import { Footer } from './Footer'
-import { Libraries } from './Libraries'
 import { Navbar } from './Navbar'
 import { useState } from 'react'
 import axios from 'axios'
@@ -40,7 +39,6 @@ const VerifyAccount = () => {
   }
   return (
     <>
-    <Libraries />
     <Navbar />
     <main className="main-content  mt-0">
     <div className="page-header align-items-start min-vh-100" style={{backgroundImage: "url('./images/loginbg.jpg')"}}>
