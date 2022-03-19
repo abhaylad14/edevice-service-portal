@@ -71,7 +71,8 @@ router.post("/", [
         (err,token) => {
         if(err) throw err;
         status = true;
-        res.json({status,token});
+        userType = user.usertype;
+        res.json({status,token,userType});
     })
     }
     else if(user.status == 2){

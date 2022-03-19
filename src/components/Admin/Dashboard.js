@@ -8,9 +8,13 @@ const Dashboard = () => {
     <div>
       <Header />
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <NavbarInner />
+        <NavbarInner title="Dashboard" />
         <div className="container-fluid py-4">
-            <h1>User Dashboard</h1>
+          <div className="card">
+            <div className="card-body">
+              <h3>Welcome admin</h3>
+            </div>
+          </div>
           <Footer />
         </div>
       </main>

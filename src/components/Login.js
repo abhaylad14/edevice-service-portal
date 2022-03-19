@@ -30,7 +30,28 @@ const Login = () => {
       }
       const res = await axios.post("http://localhost:5000/api/auth", data, config);
       if(res.data.status === true){
-        alertify.success("Login success: Welcome");
+        localStorage.setItem("x-auth-token", res.data.token);
+        let userType = res.data.userType;
+        if(userType === 0){
+          alertify.success("Login success: Welcome Admin");
+          navigate("/admin/dashboard");
+        }
+        else if(userType === 1){
+          alertify.success("Login success: Welcome Customer");
+          navigate("/user/dashboard");
+        }
+        else if(userType === 2){
+          alertify.success("Login success: Welcome Delivery boy");
+          navigate("/deliveryboy/dashboard");
+        }
+        else if(userType === 3){
+          alertify.success("Login success: Welcome Service man");
+          navigate("/serviceman/dashboard");
+        }
+        else{
+          console.log(res.data);
+          alertify.error("Error: Something went wrong!");
+        }
       }
       else if(res.data.status === false){
         alertify.success(res.data.msg);

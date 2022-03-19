@@ -14,20 +14,20 @@ export const NavbarInner = () => {
           <h6 className="font-weight-bolder mb-0">Dashboard</h6>
         </nav>
         <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div className="ms-md-auto pe-md-3 d-flex align-items-center">
+          {/* <div className="ms-md-auto pe-md-3 d-flex align-items-center">
             <div className="input-group input-group-outline">
               <label className="form-label">Type here...</label>
               <input type="text" className="form-control"/>
             </div>
-          </div>
-          <ul className="navbar-nav  justify-content-end">
+          </div> */}
+          {/* <ul className="navbar-nav  justify-content-end">
             <li className="nav-item d-flex align-items-center">
               <a href="https://www.google.co.in/" className="nav-link text-body font-weight-bold px-0">
                 <i className="fa fa-user me-sm-1"></i>
-                <span className="d-sm-inline d-none">Sign In</span>
+                <span className="d-sm-inline d-none btn border border-dark">Sign In</span>
               </a>
             </li> 
-          </ul>
+          </ul> */}
         </div>
       </div>
     </nav>
