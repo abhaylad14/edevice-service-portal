@@ -129,7 +129,7 @@ router.post("/employee", auth, [
 
 // @route   GET api/users/getcustomers
 // @desc    Get the list of customers
-// @access  Public
+// @access  Private
 router.get("/getcustomers", auth, async (req,res) => {
     let status = false;
     try {
@@ -138,7 +138,76 @@ router.get("/getcustomers", auth, async (req,res) => {
         res.status(200).json({status,data});
     } catch (err) {
         console.error(err.message);
-        res.status(500).send("Server Error");
+        res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   POST api/users/deleteuser
+// @desc    Deletes the user
+// @access  Private
+router.post("/deleteuser", auth, [
+    check("id", "User ID is required").not().isEmpty()
+], async (req,res) => {
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    try {
+        const user = await User.findByIdAndDelete({_id: req.body.id})
+        status = true;
+        res.status(200).json({status, msg: "User has been deleted successfully!"});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   POST api/users/deactivate
+// @desc    Soft Delete profile (Deactivate user)
+// @access  Private
+router.post("/deactivate", auth, [
+    check("id", "User ID is required").not().isEmpty()
+],async (req, res)=>{
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    try {
+        await User.findByIdAndUpdate({_id: req.body.id}, {status: 0});
+        status = true;
+        return res.json({status, msg: "User Deactivated successfully"});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            return res.status(400).json({ msg: "User not found"}); 
+        }
+        res.status(500).json({msg: "Server Error"});
+    }
+});
+
+// @route   POST api/users/activate
+// @desc    Restore Deleted profile (Reactive user)
+// @access  Private
+router.post("/activate", auth, [
+    check("id", "User ID is required").not().isEmpty()
+],async (req, res)=>{
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    try {
+        await User.findByIdAndUpdate({_id: req.body.id}, {status: 1});
+        status = true;
+        res.json({status, msg: "User activated successfully"});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            res.status(400).json({ msg: "User not found"}); 
+        }
+        res.status(500).json({msg: "Server Error"});
     }
 });
 

@@ -7,8 +7,7 @@ import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 
 const Users = () => {
-   const [ data, setData ] = useState([]);
-  
+  const [ data, setData ] = useState([]);
   useEffect(()=> {
     getData();
   },[]);
@@ -44,7 +43,74 @@ const Users = () => {
   } 
 
   const handleDelete = async(e) => {
-    console.log(e.target.name);
+    let id = e.target.name;
+    console.log(id);
+    try{
+      const config = {
+        header:{
+          "Content-Type": "application/json"
+        }
+      }
+      let token = await localStorage.getItem("x-auth-token");
+      axios.defaults.headers.common["x-auth-token"] = token;
+      const user = { "id": id };
+      console.log(user)
+      const res = await axios.post("http://localhost:5000/api/users/deleteuser", user, config);
+      if(res.data.status === true){
+        alertify.success(res.data.msg);
+      }
+      else{
+        alertify.error("Something went wrong!");
+      }
+    }
+    catch(err){
+      alertify.error(err.response.data['errors'][0].msg);
+    }
+  }
+  const handleStatusChange = async(e) => {
+    let id = e.target.name;
+    console.log(id);
+    try{
+      const config = {
+        header:{
+          "Content-Type": "application/json"
+        }
+      }
+      let url = "";
+      if(e.target.id == 1){
+        url = "http://localhost:5000/api/users/deactivate";
+      }
+      else if(e.target.id == 0){
+        url = "http://localhost:5000/api/users/activate";
+      }
+      else{
+        return true;
+      }
+      let token = await localStorage.getItem("x-auth-token");
+      axios.defaults.headers.common["x-auth-token"] = token;
+      const user = { "id": id };
+      console.log(user)
+      const res = await axios.post(url, user, config);
+      if(res.data.status === true){
+        if(e.target.id == 1){
+          e.target.className = "btn btn-sm btn-danger mt-1 userstatus";
+          e.target.innerText = "Inactive";
+          e.target.id = 0;
+        }
+        else if(e.target.id == 0){
+          e.target.className = "btn btn-sm btn-success mt-1 userstatus";
+          e.target.innerText = "Active";
+          e.target.id = 1;
+        }
+        alertify.success(res.data.msg);
+      }
+      else{
+        alertify.error("Something went wrong!");
+      }
+    }
+    catch(err){
+      alertify.error(err.response.data['errors'][0].msg);
+    }
   }
   return (
     <>
@@ -69,11 +135,11 @@ const Users = () => {
                     {
                     data.map(row => (
                       <tr key={row}>
-                    <td><img src={row.avatar} className="avatar avatar-sm me-3 border-radius-lg" /></td>
+                    <td><img src={row.avatar} alt="error" className="avatar avatar-sm me-3 border-radius-lg" /></td>
                     <td>{row.name}</td>
                     <td>{row.email}</td>
                     <td>{row.mobile}</td>
-                    <td className="badge mt-2 userstatus">{row.status}</td>
+                    <td><button onClick={e => handleStatusChange(e)} id={row.status} name={row._id} className="btn btn-sm mt-1 userstatus">{row.status}</button></td>
                     <td>
                     <button onClick={e => handleDelete(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-trash-alt border-0 btn-delete"></button>
                     </td>
