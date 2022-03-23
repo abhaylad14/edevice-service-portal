@@ -52,36 +52,5 @@ router.get("/:user_id", auth, async (req, res)=>{
     }
 });
 
-// @route   DELETE api/profile/:user_id
-// @desc    Soft Delete profile 
-// @access  Private
-router.delete("/:user_id", auth, async (req, res)=>{
-    try {
-        await User.findByIdAndUpdate({_id: req.params.user_id}, {status: 0});
-        res.json({msg: "Profile deleted successfully"});
-    } catch (err) {
-        console.error(err.message);
-        if(err.kind == "ObjectId"){
-            res.status(400).json({ msg: "Profile not found"}); 
-        }
-        res.status(500).send("Server Error");
-    }
-});
-
-// @route   DELETE api/profile/restore/:user_id
-// @desc    Restore Deleted profile 
-// @access  Private
-router.delete("/restore/:user_id", auth, async (req, res)=>{
-    try {
-        await User.findByIdAndUpdate({_id: req.params.user_id}, {status: 1});
-        res.json({msg: "Profile restored successfully"});
-    } catch (err) {
-        console.error(err.message);
-        if(err.kind == "ObjectId"){
-            res.status(400).json({ msg: "Profile not found"}); 
-        }
-        res.status(500).send("Server Error");
-    }
-});
 
 module.exports = router;
