@@ -5,7 +5,7 @@ import { NavbarInner } from "./NavbarInner";
 
 const Dashboard = () => {
   return (
-    <div>
+    <>
       <Header />
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <NavbarInner title="Dashboard" />
@@ -18,7 +18,7 @@ const Dashboard = () => {
           <Footer />
         </div>
       </main>
-    </div>
+    </>
   );
 };
 

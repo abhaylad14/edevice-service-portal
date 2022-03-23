@@ -127,4 +127,19 @@ router.post("/employee", auth, [
     }
 });
 
+// @route   GET api/users/getcustomers
+// @desc    Get the list of customers
+// @access  Public
+router.get("/getcustomers", auth, async (req,res) => {
+    let status = false;
+    try {
+        const data = await User.find({userType:1}).select("-password");
+        status = true;
+        res.status(200).json({status,data});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 module.exports = router;
