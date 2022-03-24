@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {check,validationResult} = require("express-validator");
-const auth = require("../../middleware/auth");
+const adminauth = require("../../middleware/adminauth");
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -17,11 +17,11 @@ const crypto = require("crypto");
     Serviceman  :  3
 */ 
 
-// @route   GET api/auth
+// @route   GET api/adminauth
 // @desc    Get Logged in User details 
 // @access  Public
-router.get("/", auth, async (req,res) => {
-    // res.send("Auth route")
+router.get("/", adminauth, async (req,res) => {
+    // res.send("adminauth route")
     try {
         const user = await User.findById(req.user.id).select("-password");
         res.json(user);
@@ -31,8 +31,8 @@ router.get("/", auth, async (req,res) => {
     }
 });
 
-// @route   POST api/auth
-// @desc    Authenticate user and get token (Login)
+// @route   POST api/adminauth
+// @desc    adminauthenticate user and get token (Login)
 // @access  Public
 router.post("/", [
     check("email", "Please enter a valid email").isEmail(),
@@ -71,7 +71,7 @@ router.post("/", [
         (err,token) => {
         if(err) throw err;
         status = true;
-        userType = user.usertype;
+        let userType = user.usertype;
         res.json({status,token,userType});
     })
     }
@@ -104,7 +104,7 @@ router.post("/", [
     }
 });
 
-// @route   POST api/auth/forgotpassword
+// @route   POST api/adminauth/forgotpassword
 // @desc    Forgot password route
 // @access  Public
 router.get("/forgotpassword",[
@@ -114,7 +114,7 @@ router.get("/forgotpassword",[
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
-    // res.send("Auth route")
+    // res.send("adminauth route")
     try {
         const user = await User.findOne({email: req.body.email, status: 1});
         // res.json(user);
@@ -128,7 +128,7 @@ router.get("/forgotpassword",[
         await user.save({ validateBeforeSave: false })
 
         // Create reset url
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
+        const resetUrl = `${req.protocol}://${req.get('host')}/api/adminauth/resetpassword/${resetToken}`;
         const message = `You are receiving this email because you ( or someone else ) has requested of a reset password. Please make a put request to: \n\n ${resetUrl}`;
         try {
              await sendEmail({
@@ -151,7 +151,7 @@ router.get("/forgotpassword",[
     }
 });
 
-// @route   PUT api/auth/resetpassword/:resetToken
+// @route   PUT api/adminauth/resetpassword/:resetToken
 // @desc    Reset Password
 // @access  Public
 router.put("/resetpassword/:resetToken", async (req,res) => {
@@ -185,7 +185,7 @@ router.put("/resetpassword/:resetToken", async (req,res) => {
     })
 });
 
-// @route   POST api/auth/verifyotp
+// @route   POST api/adminauth/verifyotp
 // @desc    Verifies the otp for an account
 // @access  Public
 router.post("/verifyotp",[

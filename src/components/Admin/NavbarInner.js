@@ -3,35 +3,131 @@ import React from 'react'
 export const NavbarInner = (props) => {
   return (
     <>
-    {/* <!-- Navbar --> */} 
-    <nav style={{backgroundColor: "#e9ecef"}} className="mt-3 navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-      <div className="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-          {/* <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li className="breadcrumb-item text-sm"><span className="opacity-5 text-dark" >Admin</span></li>
-            <li className="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
-          </ol> */}
-          <h6 className="font-weight-bolder mb-0">{props.title}</h6>
-        </nav>
-        <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          {/* <div className="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div className="input-group input-group-outline">
-              <label className="form-label">Type here...</label>
-              <input type="text" className="form-control"/>
+    <div className="app-header header-shadow">
+        <div className="app-header__logo">
+          <img height="40" src={process.env.PUBLIC_URL + '/mylogo.PNG'} />
+          <div className="header__pane ml-auto">
+            <div>
+              <button
+                type="button"
+                className="hamburger close-sidebar-btn hamburger--elastic"
+                data-class="closed-sidebar"
+              >
+                <span className="hamburger-box">
+                  <span className="hamburger-inner"></span>
+                </span>
+              </button>
             </div>
-          </div> */}
-          {/* <ul className="navbar-nav  justify-content-end">
-            <li className="nav-item d-flex align-items-center">
-              <a href="https://www.google.co.in/" className="nav-link text-body font-weight-bold px-0">
-                <i className="fa fa-user me-sm-1"></i>
-                <span className="d-sm-inline d-none btn border border-dark">Sign In</span>
-              </a>
-            </li> 
-          </ul> */}
+          </div>
+        </div>
+        <div className="app-header__mobile-menu">
+          <div>
+            <button
+              type="button"
+              className="hamburger hamburger--elastic mobile-toggle-nav"
+            >
+              <span className="hamburger-box">
+                <span className="hamburger-inner"></span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div className="app-header__menu">
+          <span>
+            <button
+              type="button"
+              className="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav"
+            >
+              <span className="btn-icon-wrapper">
+                <i className="fa fa-ellipsis-v fa-w-6"></i>
+              </span>
+            </button>
+          </span>
+        </div>
+        <div className="app-header__content">
+          <div className="app-header-left">
+            <div className="search-wrapper">
+              <button className="close"></button>
+            </div>
+            <ul className="header-menu nav">
+              <li className="dropdown nav-item">
+                <span className="nav-link">
+                  <strong>{props.title}</strong>
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div className="app-header-right">
+            <div className="header-btn-lg pr-0">
+              <div className="widget-content p-0">
+                <div className="widget-content-wrapper">
+                  
+                  <div className="widget-content-left ml-3 header-user-info mx-2">
+                    <div className="widget-heading">Admin</div>
+                  </div>
+                  <div className="widget-content-left">
+                    <div className="btn-group">
+                      <a
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        className="p-0 btn"
+                      >
+                        <img
+                          width="42"
+                          className="rounded-circle mx-2"
+                          src={process.env.PUBLIC_URL + '/user.png'}
+                          alt=""
+                        />
+                        <i className="fa fa-angle-down ml-2 opacity-8"></i>
+                      </a>
+                      <div
+                        tabIndex="-1"
+                        role="menu"
+                        aria-hidden="true"
+                        className="dropdown-menu dropdown-menu-right"
+                      >
+                        <button
+                          type="button"
+                          tabIndex="0"
+                          className="dropdown-item"
+                        >
+                          User Account
+                        </button>
+                        <button
+                          type="button"
+                          tabIndex="0"
+                          className="dropdown-item"
+                        >
+                          Settings
+                        </button>
+                        <h6 tabIndex="-1" className="dropdown-header">Header</h6>
+                        <button
+                          type="button"
+                          tabIndex="0"
+                          className="dropdown-item"
+                        >
+                          Actions
+                        </button>
+                        <div tabIndex="-1" className="dropdown-divider"></div>
+                        <button
+                          type="button"
+                          tabIndex="0"
+                          className="dropdown-item"
+                        >
+                          Dividers
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="widget-content-right header-user-info ml-3">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
-    {/* <!-- End Navbar --> */}
     </>
   )
 }

@@ -6,7 +6,7 @@ const Home = () => {
   return <>
         <Navbar />
         <div className='text-center container-fluid'>
-        <img src="./images/bghome.png" width="90%" style={{marginTop: "7%"}} alt="error"></img>
+        <img src="./images/bghome.png" width="80%" style={{marginTop: "7%"}} alt="error"></img>
         </div>
         <div className='container'>
         <Footer />

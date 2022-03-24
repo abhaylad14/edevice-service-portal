@@ -70,19 +70,15 @@ const Login = () => {
   return (
     <>
     <Navbar />
-    <main className="main-content  mt-0">
-    <div className="page-header align-items-start min-vh-100" style={{backgroundImage: "url('./images/loginbg.jpg')"}}>
+    <main className="main-content mt-0" style={{marginBottom: "10%"}}>
+    <div className="page-header align-items-start">
       <span className="mask bg-gradient-dark opacity-6"></span>
       <div className="container my-auto">
         <div className="row">
-          <div className="col-lg-4 col-md-8 col-12 mx-auto">
-            <div className="card z-index-0 fadeIn3 fadeInBottom">
-              <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div className="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                  <h4 className="text-white font-weight-bolder text-center mt-2 mb-0">Login</h4>
-                </div>
-              </div>
+          <div className="col-lg-4 col-md-8 col-12 mx-auto" style={{marginTop: "7%"}}>
+              <div className='card'>
               <div className="card-body">
+                <h3 className='text-center'>Login</h3>
                 <form onSubmit={e => handleSubmit(e)} className="text-start">
                   <div className="input-group input-group-outline my-3">
                     <input name='email' type="email" onChange={e => onChange(e)} value={email} className="form-control" placeholder='Email' required/>
@@ -95,7 +91,7 @@ const Login = () => {
                     <Link to="forgotpassword"  >Forgot Password?</Link>
                   </div>
                   <div className="text-center">
-                    <button type="submit" className="btn bg-gradient-primary w-100 my-4 mb-2">Login</button>
+                    <button type="submit" className="btn btn-primary   w-100 my-4 mb-2">Login</button>
                   </div>
                   <p className="mt-4 text-sm text-center">
                     Don't have an account?
@@ -103,7 +99,7 @@ const Login = () => {
                   </p>
                 </form>
               </div>
-            </div>
+              </div>
           </div>
         </div>
       </div>

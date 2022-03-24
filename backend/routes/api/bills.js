@@ -1,13 +1,13 @@
 const express = require("express");
 const Complain = require("../../models/Bill");
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const adminauth = require("../../middleware/adminauth");
 const {check,validationResult} = require("express-validator");
 
 // @route   GET api/bills/
 // @desc    View all the bills - admin side
 // @access  Private
-router.get("/", auth, async (req, res)=>{
+router.get("/", adminauth, async (req, res)=>{
     try {
         const bills = await Bill.find();
         res.json(bills);

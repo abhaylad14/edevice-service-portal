@@ -16,7 +16,9 @@ import { Provider } from 'react-redux';
 import VerifyAccount from './components/VerifyAccount';
 import UserDashboard from './components/User/Dashboard';
 import AdminDashboard from './components/Admin/Dashboard';
-import AdminUsers from './components/Admin/Users';
+import Customers from './components/Admin/Customers';
+import DeliveryBoys from './components/Admin/Deliveryboys';
+import Servicemen from './components/Admin/Servicemen';
 import DeliveryboyDashboard from './components/Deliveryboy/Dashboard';
 import ServicemanDashboard from './components/Serviceman/Dashboard';
 const App = () => {
@@ -33,7 +35,9 @@ const App = () => {
 
         {/* Admin */}
         <Route exact path='/admin/dashboard' element={<AdminDashboard />}/>
-        <Route exact path='/admin/users' element={<AdminUsers />}/>
+        <Route exact path='/admin/customers' element={<Customers />}/>
+        <Route exact path='/admin/deliveryboys' element={<DeliveryBoys />}/>
+        <Route exact path='/admin/servicemen' element={<Servicemen />}/>
 
 
         {/* Users */}

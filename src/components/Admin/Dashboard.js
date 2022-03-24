@@ -1,23 +1,29 @@
 import React from "react";
-import { Header } from "./Header";
+import { Sidebar } from "./Sidebar";
 import { Footer } from "./Footer";
 import { NavbarInner } from "./NavbarInner";
 
 const Dashboard = () => {
   return (
     <>
-      <Header />
-      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <NavbarInner title="Dashboard" />
-        <div className="container-fluid py-4">
-          <div className="card">
-            <div className="card-body">
-              <h3>Welcome admin</h3>
+      <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+        <NavbarInner />
+        <div className="app-main">
+          <Sidebar />
+          <div className="app-main__outer">
+          <div className="app-main__inner">
+            {/* Content Start */}
+            <div className="card">
+              <div className="card-body">
+                <h5>Admin Dashboard</h5>
+              </div>
             </div>
+            {/* Content End */}
           </div>
           <Footer />
+          </div>
         </div>
-      </main>
+      </div>
     </>
   );
 };

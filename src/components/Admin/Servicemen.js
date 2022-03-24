@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import { Footer } from "./Footer";
-import { Header } from "./Header";
-import { NavbarInner } from "./NavbarInner";
+import { Sidebar} from "./Sidebar";
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { NavbarInner } from "./NavbarInner";
 
-const Users = () => {
+const Servicemen = () => {
   const [ data, setData ] = useState([]);
   useEffect(()=> {
     getData();
@@ -20,10 +20,8 @@ const Users = () => {
           "Content-Type": "application/json",
           "x-auth-token": token
         }
-        // x-auth-token: {"x-auth-token": token}
       }
-      const res = await axios.get("http://localhost:5000/api/users/getcustomers", "",config);
-      // axios.defaults.headers.common['x-auth-token'] = `Bearer ${localStorage.getItem("x-auth-token")}` 
+      const res = await axios.get("http://localhost:5000/api/users/getserviceman", "",config);
       if(res.data.status === true){
         console.log(res.data.data);
         setData(res.data.data);
@@ -77,10 +75,10 @@ const Users = () => {
         }
       }
       let url = "";
-      if(e.target.id == 1){
+      if(e.target.id === "1"){
         url = "http://localhost:5000/api/users/deactivate";
       }
-      else if(e.target.id == 0){
+      else if(e.target.id === "0"){
         url = "http://localhost:5000/api/users/activate";
       }
       else{
@@ -92,34 +90,39 @@ const Users = () => {
       console.log(user)
       const res = await axios.post(url, user, config);
       if(res.data.status === true){
-        if(e.target.id == 1){
+        if(e.target.id === "1"){
           e.target.className = "btn btn-sm btn-danger mt-1 userstatus";
           e.target.innerText = "Inactive";
           e.target.id = 0;
         }
-        else if(e.target.id == 0){
+        else if(e.target.id === "0"){
           e.target.className = "btn btn-sm btn-success mt-1 userstatus";
           e.target.innerText = "Active";
           e.target.id = 1;
         }
         alertify.success(res.data.msg);
+        console.log(res)
       }
       else{
         alertify.error("Something went wrong!");
       }
     }
     catch(err){
+      console.log(err)
       alertify.error(err.response.data['errors'][0].msg);
     }
   }
   return (
     <>
-      <Header />
-      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <NavbarInner title="Customers" />
-        <div className="container-fluid py-4">
-          <div className="card">
-            <div className="card-body">
+     <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+        <NavbarInner title="Servicemen" />
+        <div className="app-main">
+          <Sidebar />
+          <div className="app-main__outer">
+          <div className="app-main__inner">
+            {/* Content Start */}
+            <div className="card">
+              <div className="card-body">
               <table className="table table-responsive-sm" id="myTable">
                 <thead className="table-info">
                   <tr>
@@ -134,12 +137,12 @@ const Users = () => {
                 <tbody>
                     {
                     data.map(row => (
-                      <tr key={row}>
-                    <td><img src={row.avatar} alt="error" className="avatar avatar-sm me-3 border-radius-lg" /></td>
+                      <tr key={row._id}>
+                    <td><img src={row.avatar} alt="error" height={30} /></td>
                     <td>{row.name}</td>
                     <td>{row.email}</td>
                     <td>{row.mobile}</td>
-                    <td><button onClick={e => handleStatusChange(e)} id={row.status} name={row._id} className="btn btn-sm mt-1 userstatus">{row.status}</button></td>
+                    <td><button onClick={e => handleStatusChange(e)} id={row.status} name={row._id} className="btn btn-sm userstatus">{row.status}</button></td>
                     <td>
                     <button onClick={e => handleDelete(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-trash-alt border-0 btn-delete"></button>
                     </td>
@@ -147,13 +150,27 @@ const Users = () => {
                     ))}
                 </tbody>
               </table>
+              </div>
+            </div>
+            {/* Content End */}
+          </div>
+          <Footer />
+          </div>
+        </div>
+      </div>
+      {/* <Sidebar/>
+      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <div className="container-fluid py-4">
+          <div className="card">
+            <div className="card-body">
+              
             </div>
           </div>
           <Footer />
         </div>
-      </main>
+      </main> */}
     </>
   );
 };
 
-export default Users;
+export default Servicemen;

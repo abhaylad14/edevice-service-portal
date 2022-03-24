@@ -6,7 +6,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const auth = require("../../middleware/auth");
+const adminauth = require("../../middleware/adminauth");
 
 // @route   POST api/users
 // @desc    Registration route
@@ -41,7 +41,7 @@ router.post("/", [
     });
 
     user = new User({
-        name, email, avatar, password, mobile, pincode, address, status: 2
+        name, email, avatar, password, mobile, pincode, address, status: 2, usertype: 1
     });
 
     // Encrypt Password
@@ -72,7 +72,7 @@ router.post("/", [
 // @route   POST api/users/employee
 // @desc    Employee Registration route
 // @access  Private
-router.post("/employee", auth, [
+router.post("/employee", adminauth, [
     check("name", "Name is required").not().isEmpty(),
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Please enter a password with 6 or more characters").isLength({min:8}),
@@ -130,10 +130,40 @@ router.post("/employee", auth, [
 // @route   GET api/users/getcustomers
 // @desc    Get the list of customers
 // @access  Private
-router.get("/getcustomers", auth, async (req,res) => {
+router.get("/getcustomers", adminauth, async (req,res) => {
     let status = false;
     try {
-        const data = await User.find({userType:1}).select("-password");
+        const data = await User.find({usertype:1}).select("-password");
+        status = true;
+        res.status(200).json({status,data});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   GET api/users/getdeliveryboys
+// @desc    Get the list of deliveryboys
+// @access  Private
+router.get("/getdeliveryboys", adminauth, async (req,res) => {
+    let status = false;
+    try {
+        const data = await User.find({usertype:2}).select("-password");
+        status = true;
+        res.status(200).json({status,data});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   GET api/users/getserviceman
+// @desc    Get the list of serviceman
+// @access  Private
+router.get("/getserviceman", adminauth, async (req,res) => {
+    let status = false;
+    try {
+        const data = await User.find({usertype:3}).select("-password");
         status = true;
         res.status(200).json({status,data});
     } catch (err) {
@@ -145,7 +175,7 @@ router.get("/getcustomers", auth, async (req,res) => {
 // @route   POST api/users/deleteuser
 // @desc    Deletes the user
 // @access  Private
-router.post("/deleteuser", auth, [
+router.post("/deleteuser", adminauth, [
     check("id", "User ID is required").not().isEmpty()
 ], async (req,res) => {
     let status = false;
@@ -166,7 +196,7 @@ router.post("/deleteuser", auth, [
 // @route   POST api/users/deactivate
 // @desc    Soft Delete profile (Deactivate user)
 // @access  Private
-router.post("/deactivate", auth, [
+router.post("/deactivate", adminauth, [
     check("id", "User ID is required").not().isEmpty()
 ],async (req, res)=>{
     let status = false;
@@ -190,7 +220,7 @@ router.post("/deactivate", auth, [
 // @route   POST api/users/activate
 // @desc    Restore Deleted profile (Reactive user)
 // @access  Private
-router.post("/activate", auth, [
+router.post("/activate", adminauth, [
     check("id", "User ID is required").not().isEmpty()
 ],async (req, res)=>{
     let status = false;

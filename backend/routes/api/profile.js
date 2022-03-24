@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const adminauth = require("../../middleware/adminauth");
 const User = require("../../models/User");
 const { check, validationResult} = require("express-validator");
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile (logged in user)
 // @access  Private
-router.get("/me", auth, async(req,res) => {
+router.get("/me", adminauth, async(req,res) => {
     try {
         const profile = await User.findOne({user: req.user.id }).select("-password");
         if(!profile){
@@ -23,7 +23,7 @@ router.get("/me", auth, async(req,res) => {
 // @route   GET api/profile
 // @desc    Get all profiles
 // @access  Private
-router.get("/", auth, async (req, res)=>{
+router.get("/", adminauth, async (req, res)=>{
     try {
         const profiles = await User.find().select("-password");
         res.json(profiles);
@@ -36,7 +36,7 @@ router.get("/", auth, async (req, res)=>{
 // @route   GET api/profile/:user_id
 // @desc    Get profile by user id
 // @access  Private
-router.get("/:user_id", auth, async (req, res)=>{
+router.get("/:user_id", adminauth, async (req, res)=>{
     try {
         const profile = await User.findOne({_id: req.params.user_id }).select("-password");
         if(!profile){

@@ -62,7 +62,7 @@ const Registration = ({ setAlert }) => {
   return (
     <>
       <Navbar />
-      <div className="container" style={{ marginTop: 95 }}>
+      <div className="container mt-3">
         <div className="card">
           <div className="card-body col-sm-5 mx-auto">
             <h4 className="text-center">Registration form </h4>

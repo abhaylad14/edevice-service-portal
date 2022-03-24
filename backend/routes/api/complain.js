@@ -1,7 +1,7 @@
 const express = require("express");
 const Complain = require("../../models/Complain");
 const router = express.Router();
-const auth = require("../../middleware/auth");
+const adminauth = require("../../middleware/adminauth");
 const {check,validationResult} = require("express-validator");
 
 
@@ -25,7 +25,7 @@ const {check,validationResult} = require("express-validator");
 // @route   POST api/complain/add/
 // @desc    Complain Registration route
 // @access  Private
-router.post("/add", auth, [
+router.post("/add", adminauth, [
     check("title", "Title is required").not().isEmpty(),
     check("desc", "Description is required").not().isEmpty(),
     check("brand", "Brand name is required").not().isEmpty(),
@@ -54,7 +54,7 @@ router.post("/add", auth, [
 // @route   GET api/complain/
 // @desc    Get all complains
 // @access  Private
-router.get("/", auth, async (req, res)=>{
+router.get("/", adminauth, async (req, res)=>{
     try {
         const complains = await Complain.find();
         res.json(complains);
@@ -67,7 +67,7 @@ router.get("/", auth, async (req, res)=>{
 // @route   GET api/complain/mycomplains
 // @desc    Get my all complains
 // @access  Private
-router.get("/mycomplains", auth, async (req, res)=>{
+router.get("/mycomplains", adminauth, async (req, res)=>{
     try {
         const complains = await Complain.find({user: req.user.id});
         res.json(complains);
@@ -80,7 +80,7 @@ router.get("/mycomplains", auth, async (req, res)=>{
 // @route   GET api/complain/:complain_id
 // @desc    Get complain by complain id
 // @access  Private
-router.get("/:complain_id", auth, async (req, res)=>{
+router.get("/:complain_id", adminauth, async (req, res)=>{
     try {
         const complain = await Complain.findOne({_id: req.params.complain_id });
         if(!complain){
@@ -99,7 +99,7 @@ router.get("/:complain_id", auth, async (req, res)=>{
 // @route   POST api/complain/accept
 // @desc    Complain accept route
 // @access  Private
-router.post("/accept", auth, [
+router.post("/accept", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
 ], async (req,res) => {
     const errors = validationResult(req);
@@ -127,7 +127,7 @@ module.exports = router;
 // @route   POST api/complain/reject
 // @desc    Complain reject route
 // @access  Private
-router.post("/reject", auth, [
+router.post("/reject", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
 ], async (req,res) => {
     const errors = validationResult(req);
@@ -153,7 +153,7 @@ router.post("/reject", auth, [
 // @route   POST api/complain/assign
 // @desc    Complain assign route
 // @access  Private
-router.post("/assign", auth, [
+router.post("/assign", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
     check("pickupid", "Employee id is required").not().isEmpty(),
     check("servicemanid", "Employee id is required").not().isEmpty(),
@@ -181,7 +181,7 @@ router.post("/assign", auth, [
 // @route   POST api/complain/setestimate
 // @desc    Set estimation route
 // @access  Private
-router.post("/setestimate", auth, [
+router.post("/setestimate", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
     check("estimate", "Estimate is required").not().isEmpty(),
     check("estimate", "Valid estimation is required").isNumeric()
@@ -209,7 +209,7 @@ router.post("/setestimate", auth, [
 // @route   POST api/complain/acceptservice
 // @desc    Service accept route
 // @access  Private
-router.post("/acceptservice", auth, [
+router.post("/acceptservice", adminauth, [
     check("id", "Complain id is required").not().isEmpty()
 ], async (req,res) => {
     const errors = validationResult(req);
@@ -235,7 +235,7 @@ router.post("/acceptservice", auth, [
 // @route   POST api/complain/rejectservice
 // @desc    Service reject route
 // @access  Private
-router.post("/rejectservice", auth, [
+router.post("/rejectservice", adminauth, [
     check("id", "Complain id is required").not().isEmpty()
 ], async (req,res) => {
     const errors = validationResult(req);
@@ -261,7 +261,7 @@ router.post("/rejectservice", auth, [
 // @route   POST api/complain/updatestatus
 // @desc    Pick up and delivery status update route
 // @access  Private
-router.post("/updatestatus", auth, [
+router.post("/updatestatus", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
     check("status", "Status is not valid").isNumeric()
 ], async (req,res) => {
