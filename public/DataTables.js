@@ -1,5 +1,11 @@
 $("#myTable").DataTable();
 
+$(".btn-edit").click(function(){
+    $('#editModal').modal('toggle');
+});
+$(".btn-close").click(function(){
+    $('#editModal').modal('toggle');
+});
 userstatus = document.getElementsByClassName("userstatus");
 for(let i=0; i < userstatus.length; i++){
     if(userstatus[i].innerText == 1){

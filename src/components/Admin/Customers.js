@@ -18,7 +18,6 @@ const Users = () => {
       const config = {
         header:{
           "Content-Type": "application/json",
-          "x-auth-token": token
         }
       }
       const res = await axios.get("http://localhost:5000/api/users/getcustomers", "",config);

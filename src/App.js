@@ -13,6 +13,7 @@ import Alert from './components/Alert';
 // Redux 
 import store from './store';
 import { Provider } from 'react-redux';
+
 import VerifyAccount from './components/VerifyAccount';
 import UserDashboard from './components/User/Dashboard';
 import AdminDashboard from './components/Admin/Dashboard';
@@ -21,6 +22,9 @@ import DeliveryBoys from './components/Admin/Deliveryboys';
 import Servicemen from './components/Admin/Servicemen';
 import DeliveryboyDashboard from './components/Deliveryboy/Dashboard';
 import ServicemanDashboard from './components/Serviceman/Dashboard';
+import UserRequests from './components/User/Request';
+import AddRequest from './components/User/AddRequest';
+import Brands from './components/Admin/Brands';
 const App = () => {
   return (
     <Provider store={store}>
@@ -38,10 +42,14 @@ const App = () => {
         <Route exact path='/admin/customers' element={<Customers />}/>
         <Route exact path='/admin/deliveryboys' element={<DeliveryBoys />}/>
         <Route exact path='/admin/servicemen' element={<Servicemen />}/>
+        <Route exact path='/admin/brands' element={<Brands />}/>
 
 
         {/* Users */}
         <Route exact path='/user/dashboard' element={<UserDashboard />}/>
+        <Route exact path='/user/requests' element={<UserRequests />}/>
+        <Route exact path='/user/addrequest' element={<AddRequest />}/>
+
         
         {/* Deliveryboy */}
         <Route exact path='/deliveryboy/dashboard' element={<DeliveryboyDashboard />}/>

@@ -5,7 +5,7 @@ export const NavbarInner = (props) => {
     <>
     <div className="app-header header-shadow">
         <div className="app-header__logo">
-          <img height="40" src={process.env.PUBLIC_URL + '/mylogo.PNG'} />
+          <img alt='Error' height="40" src={process.env.PUBLIC_URL + '/mylogo.PNG'} />
           <div className="header__pane ml-auto">
             <div>
               <button
@@ -67,7 +67,7 @@ export const NavbarInner = (props) => {
                   </div>
                   <div className="widget-content-left">
                     <div className="btn-group">
-                      <a
+                      <span
                         data-toggle="dropdown"
                         aria-haspopup="true"
                         aria-expanded="false"
@@ -77,10 +77,10 @@ export const NavbarInner = (props) => {
                           width="42"
                           className="rounded-circle mx-2"
                           src={process.env.PUBLIC_URL + '/user.png'}
-                          alt=""
+                          alt="error"
                         />
                         <i className="fa fa-angle-down ml-2 opacity-8"></i>
-                      </a>
+                      </span>
                       <div
                         tabIndex="-1"
                         role="menu"

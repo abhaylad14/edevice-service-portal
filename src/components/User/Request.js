@@ -1,13 +1,13 @@
-import React from "react";
-import { Sidebar } from "./Sidebar";
-import { Footer } from "./Footer";
-import { NavbarInner } from "./NavbarInner";
+import React from 'react'
+import { Footer } from './Footer'
+import { NavbarInner } from './NavbarInner'
+import { Sidebar } from './Sidebar'
 
-const Dashboard = () => {
+const Request = () => {
   return (
     <>
-      <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        <NavbarInner title="Dashboard" />
+    <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+        <NavbarInner title="Requests" />
         <div className="app-main">
           <Sidebar />
           <div className="app-main__outer">
@@ -15,7 +15,6 @@ const Dashboard = () => {
             {/* Content Start */}
             <div className="card">
               <div className="card-body">
-                <h5>User Dashboard</h5>
               </div>
             </div>
             {/* Content End */}
@@ -25,7 +24,7 @@ const Dashboard = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Dashboard;
+export default Request

@@ -29,11 +29,11 @@ export const Footer = () => {
                       </a>
                     </li> */}
                     <li className="nav-item">
-                      <a target="_blank" href="https://abhaylad14.github.io/abhay-lad-portfolio/" className="nav-link">
+                      <span className="nav-link">
                         <div className="badge badge-success mr-1 ml-0">
                         </div>
                         Made by: Abhay Lad
-                      </a>
+                      </span>
                     </li>
                   </ul>
                 </div>

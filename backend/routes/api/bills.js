@@ -1,5 +1,5 @@
 const express = require("express");
-const Complain = require("../../models/Bill");
+const Bill = require("../../models/Bill");
 const router = express.Router();
 const adminauth = require("../../middleware/adminauth");
 const {check,validationResult} = require("express-validator");
@@ -16,3 +16,5 @@ router.get("/", adminauth, async (req, res)=>{
         res.status(500).send("Server Error");
     }
 });
+
+module.exports = router;
