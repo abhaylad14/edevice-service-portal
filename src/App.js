@@ -24,7 +24,9 @@ import DeliveryboyDashboard from './components/Deliveryboy/Dashboard';
 import ServicemanDashboard from './components/Serviceman/Dashboard';
 import UserRequests from './components/User/Request';
 import AddRequest from './components/User/AddRequest';
-import Brands from './components/Admin/Brands';
+import Brands from './components/Admin/Brands'; 
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 const App = () => {
   return (
     <Provider store={store}>
@@ -36,6 +38,8 @@ const App = () => {
         <Route exact path='/registration' element={<Registration />}/>
         <Route exact path='/login' element={<Login />}/>
         <Route exact path='/verifyaccount' element={<VerifyAccount />}/>
+        <Route exact path='/forgotpassword' element={<ForgotPassword />}/>
+        <Route exact path='/resetpassword' element={<ResetPassword />}/>
 
         {/* Admin */}
         <Route exact path='/admin/dashboard' element={<AdminDashboard />}/>

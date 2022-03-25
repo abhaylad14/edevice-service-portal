@@ -58,13 +58,12 @@ const Brands = () => {
       const res = await axios.post("http://localhost:5000/api/brands/deletebrand", brand, config);
       if(res.data.status === true){
         alertify.success(res.data.msg);
+        let newdata = data.filter(row => (row._id !== id ));
+        setData(newdata)
       }
       else{
         alertify.error("Something went wrong!");
       }
-    
-    let newdata = data.filter(row => (row._id !== id ));
-    setData(newdata)
     }
     catch(err){
       alertify.error(err.response.data['errors'][0].msg);
@@ -213,7 +212,7 @@ const Brands = () => {
                   </form>
                   <hr />
                   <table className="table table-responsive-sm" id="myTable">
-                <thead className="table-info">
+                <thead className="table-primary">
                   <tr>
                     <th scope="col">Brand Name</th>
                     <th scope="col">Status</th>

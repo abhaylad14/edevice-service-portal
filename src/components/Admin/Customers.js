@@ -20,7 +20,7 @@ const Users = () => {
           "Content-Type": "application/json",
         }
       }
-      const res = await axios.get("http://localhost:5000/api/users/getcustomers", "",config);
+      const res = await axios.get("http://localhost:5000/api/users/getcustomers", "", config);
       if(res.data.status === true){
         console.log(res.data.data);
         setData(res.data.data);
@@ -55,6 +55,8 @@ const Users = () => {
       const res = await axios.post("http://localhost:5000/api/users/deleteuser", user, config);
       if(res.data.status === true){
         alertify.success(res.data.msg);
+        let newdata = data.filter(row => (row._id !== id ));
+        setData(newdata)
       }
       else{
         alertify.error("Something went wrong!");
@@ -123,7 +125,7 @@ const Users = () => {
             <div className="card">
               <div className="card-body">
               <table className="table table-responsive-sm" id="myTable">
-                <thead className="table-info">
+                <thead className="table-primary">
                   <tr>
                     <th scope="col">Image</th>
                     <th scope="col">Name</th>
@@ -157,17 +159,6 @@ const Users = () => {
           </div>
         </div>
       </div>
-      {/* <Sidebar/>
-      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <div className="container-fluid py-4">
-          <div className="card">
-            <div className="card-body">
-              
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </main> */}
     </>
   );
 };

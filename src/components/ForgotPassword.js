@@ -7,42 +7,29 @@ import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { useNavigate } from 'react-router-dom'
 
-const VerifyAccount = () => {
+const ForgotPassword = () => {
   let navigate = useNavigate();
   const [ formData, setFormData ] = useState({
-    otp: "",
+    email: "",
   });
-  const { otp } = formData;
+  const { email } = formData;
   const onChange = e => setFormData({...formData, [e.target.name]: e.target.value})
   const handleSubmit = async(e) => {
     e.preventDefault();
-    const otpdata = {
-      email : localStorage.getItem("email"),
-      "otp": otp
-    }
-    setFormData({otp: ""});
+    setFormData({email: ""});
     try {
       const config = {
         header:{
           "Content-Type": "application/json"
         }
       } 
-      const res = await axios.post("http://localhost:5000/api/auth/verifyotp", otpdata, config);
+      const emaildata = {
+        email
+      }
+      const res = await axios.post("http://localhost:5000/api/auth/forgotpassword", emaildata, config);
       if(res.data.status){
-        alertify.success("success: OTP verified");
-        let userType = res.data.userType;
-        if(userType === 1){
-          alertify.success("Login success: Welcome Customer");
-          navigate("/user/dashboard");
-        }
-        else if(userType === 2){
-          alertify.success("Login success: Welcome Delivery boy");
-          navigate("/deliveryboy/dashboard");
-        }
-        else if(userType === 3){
-          alertify.success("Login success: Welcome Service man");
-          navigate("/serviceman/dashboard");
-        }
+        alertify.success(res.data.msg);
+        navigate("/login");
       }
       else{
         alertify.error("Error: Something went wrong!");
@@ -62,11 +49,10 @@ const VerifyAccount = () => {
           <div className="col-lg-4 col-md-8 col-12 mx-auto" style={{marginTop: "7%"}}>
               <div className='card'>
               <div className="card-body">
-                <h3 className='text-center'>Verify Account</h3>
+                <h3 className='text-center mb-4'>Forgot Password</h3>
                 <form onSubmit={e => handleSubmit(e)} >
-                  <div className="input-group input-group-outline my-3">
-                    <input name='otp' onChange={e => onChange(e)} value={otp} title='Must require 6 digits OTP' type="text" pattern="^[0-9]{6}$" className="form-control" placeholder='Enter OTP here' required/>
-                  </div>
+                      <label className='ml-2'>Enter your registered Email</label>
+                      <input name='email' type="email" onChange={e => onChange(e)} value={email} className="form-control" placeholder='Email' required/>
                   <div className="text-center">
                     <button type="submit" className="btn btn-primary w-100 my-4 mb-2">Submit</button>
                   </div>
@@ -84,4 +70,4 @@ const VerifyAccount = () => {
   )
 }
 
-export default VerifyAccount
+export default ForgotPassword;

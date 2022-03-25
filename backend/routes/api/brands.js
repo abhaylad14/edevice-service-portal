@@ -20,7 +20,7 @@ router.get("/", adminauth, async (req, res) => {
 });
 
 // @route   GET api/brands/getbrands
-// @desc    View all the brands
+// @desc    View active the brands
 // @access  Private
 router.get("/getbrands", async (req, res) => {
   let status = false;

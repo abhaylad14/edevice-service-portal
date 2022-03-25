@@ -2,6 +2,7 @@ const express = require("express");
 const Complain = require("../../models/Complain");
 const router = express.Router();
 const adminauth = require("../../middleware/adminauth");
+const customerauth = require("../../middleware/customerauth");
 const {check,validationResult} = require("express-validator");
 
 
@@ -22,32 +23,34 @@ const {check,validationResult} = require("express-validator");
     12: Delivered
 */
 
-// @route   POST api/complain/add/
+// @route   POST api/complain/add
 // @desc    Complain Registration route
 // @access  Private
-router.post("/add", adminauth, [
+router.post("/add", customerauth, [
     check("title", "Title is required").not().isEmpty(),
     check("desc", "Description is required").not().isEmpty(),
     check("brand", "Brand name is required").not().isEmpty(),
     check("modelname", "Model name is required").not().isEmpty(),
     check("modelno", "Model number is required").not().isEmpty(),
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
-    const { user, title, desc, photo, brand, modelname, modelno } = req.body;
+    const { title, desc, photo, brand, modelname, modelno } = req.body;
     try{
 
     complain = new Complain({
-        user, title, desc, photo, brand, modelname, modelno
+        user: req.user.id,title, desc, photo, brand, modelname, modelno
     });
         await complain.save();
-        res.json({msg: "Complain registered successfully!"});
+        status = true
+        res.status(200).json({status, msg: "Complain registered successfully!"});
     }catch(err){
         console.error(err);
-        res.status(500).send("Server error");
+        res.status(500).json({msg:"Server error"});
     }
 });
 
@@ -67,10 +70,24 @@ router.get("/", adminauth, async (req, res)=>{
 // @route   GET api/complain/mycomplains
 // @desc    Get my all complains
 // @access  Private
-router.get("/mycomplains", adminauth, async (req, res)=>{
+router.get("/mycomplains", customerauth, async (req, res)=>{
+    let status = false;
     try {
-        const complains = await Complain.find({user: req.user.id});
-        res.json(complains);
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+               
+             }
+            ]);
+            complains = complains.filter(row => (row.user == req.user.id))
+            // .find({user: req.user.id})
+        status = true;
+        res.status(200).json({status,complains});
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
@@ -81,12 +98,18 @@ router.get("/mycomplains", adminauth, async (req, res)=>{
 // @desc    Get complain by complain id
 // @access  Private
 router.get("/:complain_id", adminauth, async (req, res)=>{
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
     try {
         const complain = await Complain.findOne({_id: req.params.complain_id });
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json(complain);
+        status = true;
+        res.status(200).json({status, complain});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){

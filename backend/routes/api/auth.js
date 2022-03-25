@@ -32,7 +32,7 @@ router.get("/", adminauth, async (req,res) => {
 });
 
 // @route   POST api/adminauth
-// @desc    adminauthenticate user and get token (Login)
+// @desc    authenticate user and get token (Login)
 // @access  Public
 router.post("/", [
     check("email", "Please enter a valid email").isEmail(),
@@ -107,9 +107,10 @@ router.post("/", [
 // @route   POST api/adminauth/forgotpassword
 // @desc    Forgot password route
 // @access  Public
-router.get("/forgotpassword",[
+router.post("/forgotpassword",[
         check("email", "Please enter a valid email").isEmail()
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -128,7 +129,8 @@ router.get("/forgotpassword",[
         await user.save({ validateBeforeSave: false })
 
         // Create reset url
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/adminauth/resetpassword/${resetToken}`;
+        // const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
+        const resetUrl = `http://localhost:3000/resetpassword?q=${resetToken}`;
         const message = `You are receiving this email because you ( or someone else ) has requested of a reset password. Please make a put request to: \n\n ${resetUrl}`;
         try {
              await sendEmail({
@@ -136,7 +138,8 @@ router.get("/forgotpassword",[
                  subject: "Password Reset Token",
                  message 
              });
-             res.status(200).json({msg: "Email sent successfully!"})
+             status = true;
+             res.status(200).json({status, msg: "Email sent successfully!"});
         } catch (err) {
             console.log(err);
             user.resetPasswordToken = undefined;
@@ -151,19 +154,22 @@ router.get("/forgotpassword",[
     }
 });
 
-// @route   PUT api/adminauth/resetpassword/:resetToken
+// @route   POST api/adminauth/resetpassword/
 // @desc    Reset Password
 // @access  Public
-router.put("/resetpassword/:resetToken", async (req,res) => {
+router.post("/resetpassword",[
+    check("password", "Password is required").not().isEmpty(),
+    check("resetToken", "ResetToken is required").not().isEmpty()
+], async (req,res) => {
+    let status = false;
     // Get hashed token
-    const resetPasswordToken = crypto.createHash('sha256').update(req.params.resetToken).digest('hex');
-    
+    const resetPasswordToken = crypto.createHash('sha256').update(req.body.resetToken).digest('hex');
     const user = await User.findOne({
         resetPasswordToken,
         resetPasswordExpire: {$gt: Date.now()}
     });
     if(!user){
-        return res.status(400).send("Invalid Token");
+        return res.status(400).json({status, msg: "Invalid Token"});
     }
     // Set new Password
     // Encrypt Password
@@ -181,7 +187,8 @@ router.put("/resetpassword/:resetToken", async (req,res) => {
     jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 3600},
     (err,token) => {
         if(err) throw err;
-        res.json({token});
+        status = true;
+        res.status(200).json({status,token});
     })
 });
 
@@ -217,9 +224,10 @@ router.post("/verifyotp",[
         status = true;
         user.resetPasswordExpire = undefined;
         user.resetPasswordToken = undefined;
-        user.status = 1
+        user.status = 1;
+        let userType = user.usertype;
         await user.save({validateBeforeSave: false});
-        return res.status(200).json({status,token});
+        return res.status(200).json({status, token, userType});
     })
     } catch (err) {
         console.error(err.message);

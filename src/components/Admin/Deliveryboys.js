@@ -56,6 +56,8 @@ const DeliveryBoys = () => {
       const res = await axios.post("http://localhost:5000/api/users/deleteuser", user, config);
       if(res.data.status === true){
         alertify.success(res.data.msg);
+        let newdata = data.filter(row => (row._id !== id ));
+        setData(newdata)
       }
       else{
         alertify.error("Something went wrong!");
@@ -124,7 +126,7 @@ const DeliveryBoys = () => {
             <div className="card">
               <div className="card-body">
               <table className="table table-responsive-sm" id="myTable">
-                <thead className="table-info">
+                <thead className="table-primary">
                   <tr>
                     <th scope="col">Image</th>
                     <th scope="col">Name</th>

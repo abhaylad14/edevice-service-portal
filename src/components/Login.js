@@ -88,7 +88,7 @@ const Login = () => {
                     pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
                   </div>
                   <div className='d-flex justify-content-end text-xs'>
-                    <Link to="forgotpassword"  >Forgot Password?</Link>
+                    <Link to="/forgotpassword">Forgot Password?</Link>
                   </div>
                   <div className="text-center">
                     <button type="submit" className="btn btn-primary   w-100 my-4 mb-2">Login</button>
@@ -103,7 +103,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-     
     </div>
   </main>
     <Footer />
