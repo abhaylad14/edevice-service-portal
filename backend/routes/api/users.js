@@ -86,7 +86,7 @@ router.post("/employee", adminauth, [
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
-    const {name, email, password, mobile, pincode, address,type} = req.body;
+    const {name, email, password, mobile, pincode, address, type} = req.body;
     try{
     // See if user exists
     let user = await User.findOne({email});
@@ -102,7 +102,7 @@ router.post("/employee", adminauth, [
     });
 
     user = new User({
-        name, email, avatar, password, mobile, pincode, address, type
+        name, email, avatar, password, mobile, pincode, address, usertype: type, status: 1
     });
 
     // Encrypt Password
@@ -161,6 +161,21 @@ router.get("/getdeliveryboys", adminauth, async (req,res) => {
 // @desc    Get the list of serviceman
 // @access  Private
 router.get("/getserviceman", adminauth, async (req,res) => {
+    let status = false;
+    try {
+        const data = await User.find({usertype:3}).select("-password");
+        status = true;
+        res.status(200).json({status,data});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   GET api/users/serviceman
+// @desc    Get the list of active serviceman
+// @access  Private
+router.get("/serviceman", adminauth, async (req,res) => {
     let status = false;
     try {
         const data = await User.find({usertype:3}).select("-password");

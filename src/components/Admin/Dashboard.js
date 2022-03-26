@@ -7,7 +7,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        <NavbarInner />
+        <NavbarInner title="Dashboard" />
         <div className="app-main">
           <Sidebar />
           <div className="app-main__outer">

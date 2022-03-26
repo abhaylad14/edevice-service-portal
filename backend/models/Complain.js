@@ -42,7 +42,7 @@ const ComplainSchema = new mongoose.Schema({
         ref: "user",
         required: false
     },
-    repaireruser:{
+    serviceman:{
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
         required: false

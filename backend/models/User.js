@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
     },
     usertype: {
         type: Number,
-        default: "1"
+        required: true
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,

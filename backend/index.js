@@ -24,6 +24,7 @@ app.use("/api/complain", require("./routes/api/complain"))
 app.use("/api/profile", require("./routes/api/profile"))
 app.use("/api/bills", require("./routes/api/bills"))
 app.use("/api/brands", require("./routes/api/brands"))
+app.use("/api/feedback", require("./routes/api/feedback"))
 
 
 app.listen(port, () => {

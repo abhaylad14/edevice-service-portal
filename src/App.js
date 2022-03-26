@@ -28,6 +28,9 @@ import Brands from './components/Admin/Brands';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import Requests from './components/Admin/Requests';
+import AssignRequest from './components/Admin/AssignRequest';
+import Feedbacks from './components/Admin/Feedbacks';
+import Feedback from './components/User/Feedback';
 
 const App = () => {
   return (
@@ -50,12 +53,14 @@ const App = () => {
         <Route exact path='/admin/servicemen' element={<Servicemen />}/>
         <Route exact path='/admin/brands' element={<Brands />}/>
         <Route exact path='/admin/requests' element={<Requests />}/>
-
+        <Route exact path='/admin/assignrequest' element={<AssignRequest />}/>
+        <Route exact path='/admin/feedbacks' element={<Feedbacks />}/>
 
         {/* Users */}
         <Route exact path='/user/dashboard' element={<UserDashboard />}/>
         <Route exact path='/user/requests' element={<UserRequests />}/>
         <Route exact path='/user/addrequest' element={<AddRequest />}/>
+        <Route exact path='/user/feedback' element={<Feedback />}/>
 
         
         {/* Deliveryboy */}

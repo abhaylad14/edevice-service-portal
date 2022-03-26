@@ -67,6 +67,18 @@ export const Sidebar = () => {
                     Requests 
                   </Link>
                 </li>
+                <li>
+                  <Link to="/admin/assignrequest" className="mt-2">
+                    <i className="metismenu-icon fas fa-comment"></i>
+                    Assign Request 
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/feedbacks" className="mt-2">
+                    <i className="metismenu-icon far fa-comments"></i>
+                    Feedback
+                  </Link>
+                </li>
                 <li className="app-sidebar__heading">Users</li>
                 <li>
                   <Link to="/admin/customers" className="mt-2">

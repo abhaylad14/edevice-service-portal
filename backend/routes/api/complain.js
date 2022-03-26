@@ -78,10 +78,37 @@ router.get("/", adminauth, async (req, res)=>{
     }
 });
 
+// @route   GET api/complain/accepted
+// @desc    Get all accepted complains
+// @access  Private
+router.get("/accepted", adminauth, async (req, res)=>{
+    let status = false;
+    try {
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+             }
+            ]);
+            complains = complains.filter(row => (row.status == 1));
+        status = true;
+        res.status(200).json({status,complains});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 // @route   GET api/complain/mycomplains
 // @desc    Get my all complains
 // @access  Private
-router.get("/mycomplains", customerauth, async (req, res)=>{
+router.get("/mycomplains", customerauth, [
+    check("id", "Request ID is required").not().isEmpty(),
+],async (req, res)=>{
     let status = false;
     try {
         let complains = await Complain.aggregate([
@@ -95,7 +122,7 @@ router.get("/mycomplains", customerauth, async (req, res)=>{
                
              }
             ]);
-            complains = complains.filter(row => (row.user == req.user.id))
+            complains = complains.filter(row => (row.user == req.user.id));
             // .find({user: req.user.id})
         status = true;
         res.status(200).json({status,complains});
@@ -105,26 +132,39 @@ router.get("/mycomplains", customerauth, async (req, res)=>{
     }
 });
 
-// @route   GET api/complain/:complain_id
+// @route   GET api/complain/getone
 // @desc    Get complain by complain id
 // @access  Private
-router.get("/:complain_id", adminauth, async (req, res)=>{
+router.get("/getone", adminauth, [
+    check("id", "Request ID is required").not().isEmpty(),
+], async (req, res)=>{
     let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     try {
-        const complain = await Complain.findOne({_id: req.params.complain_id });
-        if(!complain){
-            return res.status(400).json({ msg: "Complain not found"});
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+               
+             }
+            ]);
+            complains = complains.filter(row => (row._id == req.body.id));
+        if(!complains){
+            return res.status(400).json({ msg: "Request not found"});
         }
         status = true;
-        res.status(200).json({status, complain});
+        res.status(200).json({status, complains});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
-            return res.status(400).json({ msg: "Complain not found"}); 
+            return res.status(400).json({ msg: "Request not found"}); 
         }
         res.status(500).send("Server Error");
     }
@@ -136,6 +176,7 @@ router.get("/:complain_id", adminauth, async (req, res)=>{
 router.post("/accept", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -146,13 +187,14 @@ router.post("/accept", adminauth, [
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Complain accepted successfully!"});
+        status = true;
+        res.status(200).json({ status, msg: "Complain accepted successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
             return res.status(400).json({ msg: "Complain not found"}); 
         }
-        res.status(500).send("Server Error");
+        res.status(500).json({msg: "Server Error"});
     }
 });
 
@@ -164,6 +206,7 @@ module.exports = router;
 router.post("/reject", adminauth, [
     check("id", "Complain id is required").not().isEmpty(),
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -174,39 +217,41 @@ router.post("/reject", adminauth, [
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Complain rejected successfully!"});
+        status = true;
+        res.status(200).json({status, msg: "Complain rejected successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
             return res.status(400).json({ msg: "Complain not found"}); 
         }
-        res.status(500).send("Server Error");
+        res.status(500).json({msg: "Server Error"});
     }
 });
 
 // @route   POST api/complain/assign
 // @desc    Complain assign route
 // @access  Private
-router.post("/assign", adminauth, [
-    check("id", "Complain id is required").not().isEmpty(),
-    check("pickupid", "Employee id is required").not().isEmpty(),
-    check("servicemanid", "Employee id is required").not().isEmpty(),
+router.post("/assignserviceman", adminauth, [
+    check("cid", "Complain id is required").not().isEmpty(),
+    check("sid", "Employee id is required").not().isEmpty(),
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
     try {
-        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{pickupuser: req.body.pickupid,repaireruser: req.body.servicemanid});
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.cid },{serviceman: req.body.sid});
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Employees assigned successfully!"});
+        status = true;
+        res.status(200).json({status,msg: "Serviceman assigned successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
-            return res.status(400).json({ msg: "Cannot assign employee!"}); 
+            return res.status(400).json({ msg: "Cannot assign Serviceman!"}); 
         }
         res.status(500).send("Server Error");
     }

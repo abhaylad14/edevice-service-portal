@@ -100,7 +100,7 @@ const AddRequest = () => {
                       required
                     ></textarea>
                     <label>Brand</label>
-                    <select className="form-control mb-2" onChange={e => onChange(e)} value={brand} name="brand" id="cars" required>
+                    <select className="form-control mb-2" onChange={e => onChange(e)} value={brand} name="brand" required>
                     <option value="" disabled defaultValue>--- Select Brand ---</option>
                       { data.map(row => (<option key={row._id} value={row.id}>{row.name}</option>)) }
                     </select>

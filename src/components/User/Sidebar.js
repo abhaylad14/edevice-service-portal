@@ -68,6 +68,12 @@ export const Sidebar = () => {
                     Requests 
                   </Link>
                 </li>
+                <li>
+                  <Link to="/user/feedback" className="mt-2"> 
+                    <i className="metismenu-icon far fa-comments"></i>
+                    Feedback 
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
