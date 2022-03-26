@@ -27,6 +27,8 @@ import AddRequest from './components/User/AddRequest';
 import Brands from './components/Admin/Brands'; 
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
+import Requests from './components/Admin/Requests';
+
 const App = () => {
   return (
     <Provider store={store}>
@@ -47,6 +49,7 @@ const App = () => {
         <Route exact path='/admin/deliveryboys' element={<DeliveryBoys />}/>
         <Route exact path='/admin/servicemen' element={<Servicemen />}/>
         <Route exact path='/admin/brands' element={<Brands />}/>
+        <Route exact path='/admin/requests' element={<Requests />}/>
 
 
         {/* Users */}

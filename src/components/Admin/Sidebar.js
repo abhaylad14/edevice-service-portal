@@ -61,6 +61,12 @@ export const Sidebar = () => {
                     Brands 
                   </Link>
                 </li>
+                <li>
+                  <Link to="/admin/requests" className="mt-2">
+                    <i className="metismenu-icon far fa-comment"></i>
+                    Requests 
+                  </Link>
+                </li>
                 <li className="app-sidebar__heading">Users</li>
                 <li>
                   <Link to="/admin/customers" className="mt-2">

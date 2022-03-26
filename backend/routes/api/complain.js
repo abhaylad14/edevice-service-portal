@@ -58,9 +58,20 @@ router.post("/add", customerauth, [
 // @desc    Get all complains
 // @access  Private
 router.get("/", adminauth, async (req, res)=>{
+    let status = false;
     try {
-        const complains = await Complain.find();
-        res.json(complains);
+        const complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+             }
+            ]);
+        status = true;
+        res.status(200).json({status,complains});
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Server Error");
@@ -305,6 +316,27 @@ router.post("/updatestatus", adminauth, [
             return res.status(400).json({ msg: "Something went wrong!"}); 
         }
         res.status(500).send("Server Error");
+    }
+});
+
+// @route   POST api/complain/delete
+// @desc    Deletes the complain
+// @access  Private
+router.post("/delete", customerauth, [
+    check("id", "Request ID is required").not().isEmpty()
+], async (req,res) => {
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    try {
+        const request = await Complain.findByIdAndDelete({_id: req.body.id})
+        status = true;
+        res.status(200).json({status, msg: "Request has been deleted successfully!"});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Server Error!"});
     }
 });
 
