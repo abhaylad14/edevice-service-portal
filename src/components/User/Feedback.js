@@ -38,7 +38,7 @@ const Feedback = () => {
      
         alertify.success(res.data.msg);
       } else {
-        alertify.error("Somthing went wrong!");
+        alertify.error("Something went wrong!");
       }
     } catch (err) {
       alertify.error(err.response.data["errors"][0].msg);
