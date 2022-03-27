@@ -5,8 +5,10 @@ import { Sidebar } from './Sidebar';
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { useNavigate } from 'react-router-dom';
 
-const Requests = () => {
+const ServiceRequests = () => {
+  let navigate = useNavigate();
     const [ data, setData ] = useState([]);
   useEffect(()=> {
     getData();
@@ -20,7 +22,7 @@ const Requests = () => {
       }
       let token = await localStorage.getItem("x-auth-token");
       axios.defaults.headers.common["x-auth-token"] = token;
-      const res = await axios.get("http://localhost:5000/api/complain", "", config);
+      const res = await axios.get("http://localhost:5000/api/complain/servicerequests", "", config);
       if(res.data.status === true){
         console.log(res.data.complains);
         setData(res.data.complains);
@@ -38,53 +40,66 @@ const Requests = () => {
       alertify.error("Something went wrong!");
     }
   } 
-  const handleRequest = async(e) => {
-    //   console.log(e.target.id);
+  const handleEdit = (e) => {
     let id = e.target.name;
-    try {
-        const config = {
-            header:{
-              "Content-Type": "application/json",
-            }
-          }
-          let token = await localStorage.getItem("x-auth-token");
-          axios.defaults.headers.common["x-auth-token"] = token;
-          const complain = { id }
-          let url = "";
-          if(e.target.id === "1"){
-                url = "http://localhost:5000/api/complain/accept";
-          }
-          else if(e.target.id === "2"){
-                url = "http://localhost:5000/api/complain/reject";
-          }
-          console.log(url)
-          const res = await axios.post(url, complain, config);
-          if(res.data.status === true){
-            if(e.target.id === "1"){
-                e.target.parentElement.children[1].remove();
-                e.target.parentElement.children[0].remove();
-          }
-          else if(e.target.id === "2"){
-            e.target.parentElement.children[0].remove();
-            e.target.parentElement.children[0].remove();
-          }
-            alertify.success(res.data.msg)
-           
-            getData();
-          }
-          else{
-              console.log(res.data);
-              alertify.error("Error: Something went wrong!");
-          }
-    } catch (err) {
-        console.log(err);
-        alertify.error("Something went wrong!");
+    navigate(`/serviceman/setestimate?id=${id}`);
+  }
+  const handleStartService = async(e) => {
+    let id = e.target.name;
+    const sdata = { id };
+    try{
+      const config = {
+        header:{
+          "Content-Type": "application/json",
+        }
+      }
+      let token = await localStorage.getItem("x-auth-token");
+      axios.defaults.headers.common["x-auth-token"] = token;
+      const res = await axios.post("http://localhost:5000/api/complain/startservice", sdata, config);
+      if(res.data.status === true){
+        alertify.success(res.data.msg);
+        getData();
+        e.target.remove();
+      }
+      else{
+          console.log(res.data);
+          alertify.error("Error: Something went wrong!");
+      }
+    }
+    catch(err){
+      alertify.error("Something went wrong!");
+    }
+  }
+  const handleCompleteService = async(e) => {
+    let id = e.target.name;
+    const sdata = { id };
+    try{
+      const config = {
+        header:{
+          "Content-Type": "application/json",
+        }
+      }
+      let token = await localStorage.getItem("x-auth-token");
+      axios.defaults.headers.common["x-auth-token"] = token;
+      const res = await axios.post("http://localhost:5000/api/complain/completeservice", sdata, config);
+      if(res.data.status === true){
+        alertify.success(res.data.msg);
+        getData();
+        e.target.remove();
+      }
+      else{
+          console.log(res.data);
+          alertify.error("Error: Something went wrong!");
+      }
+    }
+    catch(err){
+      alertify.error("Something went wrong!");
     }
   }
   return (
     <>
     <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
-        <NavbarInner title="Requests" />
+        <NavbarInner title="Service Requests" />
         <div className="app-main">
           <Sidebar />
           <div className="app-main__outer">
@@ -117,8 +132,9 @@ const Requests = () => {
                     <td>{row.modelno}</td>
                     <td ><button className='rstatus btn btn-sm'>{row.status}</button></td>
                     <td>
-                    <button style={{visibility: "hidden"}} id="1" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-success btn-sm fas fa-check border-0 abtn-accept"> Accept</button>
-                    <button style={{visibility: "hidden"}} id="2" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-times border-0 abtn-reject"> Reject</button>
+                    <button style={{visibility: "hidden"}} onClick={e => handleEdit(e)} id={row.status} name={row._id} className="btn btn-outline-info btn-sm fas fa-edit btn-estimate border-0"> Set Esitmate</button>
+                    <button style={{visibility: "hidden"}} onClick={e => handleStartService(e)} id={row.status} name={row._id} className="btn btn-outline-success btn-sm fas fa-play btn-service border-0"> Start Service</button>
+                    <button style={{visibility: "hidden"}} onClick={e => handleCompleteService(e)} id={row.status} name={row._id} className="btn btn-outline-warning btn-sm fas fa-stop btn-complete border-0"> Service Completed</button>
                     </td>
                     </tr>
                     ))}
@@ -136,4 +152,4 @@ const Requests = () => {
   )
 }
 
-export default Requests
+export default ServiceRequests

@@ -8,11 +8,12 @@ import 'alertifyjs/build/css/alertify.css';
 
 const AssignRequest = () => {
     const [ smen, setSmen ] = useState([]);
-    const [ rdata, setRdata ] = useState([]);
+    const [ dboys, setDboys ] = useState([]);
     const [ data, setData ] = useState([]);
   useEffect(()=> {
     getData();
-    getserviceman()
+    getserviceman();
+    getdeliveryboys();
   },[]);
   const getData = async() => {
     try{
@@ -64,7 +65,30 @@ const AssignRequest = () => {
       alertify.error("Something went wrong!");
     }
   } 
-  const handleAssign = async(e) => {
+  const getdeliveryboys = async() => {
+    try{
+      const config = {
+        header:{
+          "Content-Type": "application/json",
+        }
+      }
+      let token = await localStorage.getItem("x-auth-token");
+      axios.defaults.headers.common["x-auth-token"] = token;
+      const res = await axios.get("http://localhost:5000/api/users/deliveryboys", "", config);
+      if(res.data.status === true){
+        console.log(res.data.data);
+        setDboys(res.data.data);
+      }
+      else{
+          console.log(res.data);
+          alertify.error("Error: Something went wrong!");
+      }
+    }
+    catch(err){
+      alertify.error("Something went wrong!");
+    }
+  } 
+  const handleAssignSman = async(e) => {
     let sid = e.target.value;
     let cid = e.target.id;
     try {
@@ -77,6 +101,58 @@ const AssignRequest = () => {
           axios.defaults.headers.common["x-auth-token"] = token;
           const complain = { cid,sid }
           const res = await axios.post("http://localhost:5000/api/complain/assignserviceman", complain, config);
+          if(res.data.status === true){
+            alertify.success(res.data.msg)
+            getData();
+          }
+          else{
+              console.log(res.data);
+              alertify.error("Error: Something went wrong!");
+          }
+    } catch (err) {
+        console.log(err);
+        alertify.error("Something went wrong!");
+    }
+  }
+  const handleAssignPickupboy = async(e) => {
+    let pid = e.target.value;
+    let cid = e.target.id;
+    try {
+        const config = {
+            header:{
+              "Content-Type": "application/json",
+            }
+          }
+          let token = await localStorage.getItem("x-auth-token");
+          axios.defaults.headers.common["x-auth-token"] = token;
+          const complain = { cid,pid }
+          const res = await axios.post("http://localhost:5000/api/complain/assignpickup", complain, config);
+          if(res.data.status === true){
+            alertify.success(res.data.msg)
+            getData();
+          }
+          else{
+              console.log(res.data);
+              alertify.error("Error: Something went wrong!");
+          }
+    } catch (err) {
+        console.log(err);
+        alertify.error("Something went wrong!");
+    }
+  }
+  const handleAssignDeliveryboy = async(e) => {
+    let did = e.target.value;
+    let cid = e.target.id;
+    try {
+        const config = {
+            header:{
+              "Content-Type": "application/json",
+            }
+          }
+          let token = await localStorage.getItem("x-auth-token");
+          axios.defaults.headers.common["x-auth-token"] = token;
+          const complain = { cid, did }
+          const res = await axios.post("http://localhost:5000/api/complain/assigndelivery", complain, config);
           if(res.data.status === true){
             alertify.success(res.data.msg)
             getData();
@@ -110,6 +186,8 @@ const AssignRequest = () => {
                     <th scope="col">Model Name</th>
                     <th scope="col">Model No.</th>
                     <th scope="col">Service Man</th>
+                    <th scope="col">Pickup Boy</th>
+                    <th scope="col">Delivery Boy</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -121,13 +199,18 @@ const AssignRequest = () => {
                     <td>{row.brand}</td>
                     <td>{row.modelname}</td>
                     <td>{row.modelno}</td>
-                    <td><select id={row._id} value={row.serviceman != undefined ? row.serviceman : ""} onChange={e => handleAssign(e)} className='form-control' name='sid'> 
+                    <td><select id={row._id} value={row.serviceman !== undefined ? row.serviceman : ""} onChange={e => handleAssignSman(e)} className='form-control' name='sid'> 
                     <option value="" disabled>--- Select ---</option>
                     {smen.map(x => (<option key={x._id} value={x._id}>{x.name}</option>))}
                       </select></td>
-                      {/* <td>
-                    <button name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 btn-edit"> View</button>
-                    </td> */}
+                      <td><select id={row._id} value={row.pickupuser !== undefined ? row.pickupuser : ""} onChange={e => handleAssignPickupboy(e)} className='form-control' name='sid'> 
+                    <option value="" disabled>--- Select ---</option>
+                    {dboys.map(x => (<option key={x._id} value={x._id}>{x.name}</option>))}
+                      </select></td>
+                      <td><select id={row._id} value={row.deliveryuser !== undefined ? row.deliveryuser : ""} onChange={e => handleAssignDeliveryboy(e)} className='form-control' name='sid'> 
+                    <option value="" disabled>--- Select ---</option>
+                    {dboys.map(x => (<option key={x._id} value={x._id}>{x.name}</option>))}
+                      </select></td>
                     </tr>
                     ))}
                 </tbody>

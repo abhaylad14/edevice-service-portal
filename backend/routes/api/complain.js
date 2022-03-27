@@ -3,7 +3,10 @@ const Complain = require("../../models/Complain");
 const router = express.Router();
 const adminauth = require("../../middleware/adminauth");
 const customerauth = require("../../middleware/customerauth");
+const deliveryboy = require("../../middleware/deliveryboyauth");
+const servicemanauth = require("../../middleware/servicemanauth");
 const {check,validationResult} = require("express-validator");
+const deliveryboyauth = require("../../middleware/deliveryboyauth");
 
 
 /*
@@ -11,12 +14,12 @@ const {check,validationResult} = require("express-validator");
     0:  Pending
     1:  Accepted
     2:  Rejected
-    3:  price approval pending
-    4:  Service Accepted
-    5:  Service Rejected
-    6:  Waiting for pickup
-    7:  Picked up
-    8:  Delivered to the company
+    3:  Waiting for pickup
+    4:  Picked up
+    5:  Delivered to the company
+    6:  price approval pending
+    7:  Service Accepted
+    8:  Service Rejected
     9:  In service
     10: Shipped
     11: Out for delivery
@@ -133,9 +136,9 @@ router.get("/mycomplains", customerauth, [
 });
 
 // @route   GET api/complain/getone
-// @desc    Get complain by complain id
+// @desc    Get complain by complain id (delivery boy side)
 // @access  Private
-router.get("/getone", adminauth, [
+router.post("/getone", deliveryboyauth, [
     check("id", "Request ID is required").not().isEmpty(),
 ], async (req, res)=>{
     let status = false;
@@ -151,8 +154,44 @@ router.get("/getone", adminauth, [
                  localField: 'user',
                  foreignField: '_id',
                  as: 'userdetails'
-               },
-               
+               }
+             }
+            ]);
+            complains = complains.filter(row => (row._id == req.body.id));
+        if(!complains){
+            return res.status(400).json({ msg: "Request not found"});
+        }
+        status = true;
+        res.status(200).json({status, complains});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            return res.status(400).json({ msg: "Request not found"}); 
+        }
+        res.status(500).send("Server Error");
+    }
+});
+
+// @route   GET api/complain/viewrequest
+// @desc    Get complain by complain id
+// @access  Private
+router.post("/viewrequest", customerauth, [
+    check("id", "Request ID is required").not().isEmpty(),
+], async (req, res)=>{
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    try {
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               }
              }
             ]);
             complains = complains.filter(row => (row._id == req.body.id));
@@ -228,8 +267,8 @@ router.post("/reject", adminauth, [
     }
 });
 
-// @route   POST api/complain/assign
-// @desc    Complain assign route
+// @route   POST api/complain/assignserviceman
+// @desc    Complain assign serviceman route
 // @access  Private
 router.post("/assignserviceman", adminauth, [
     check("cid", "Complain id is required").not().isEmpty(),
@@ -257,93 +296,215 @@ router.post("/assignserviceman", adminauth, [
     }
 });
 
-// @route   POST api/complain/setestimate
-// @desc    Set estimation route
+// @route   POST api/complain/assignpickup
+// @desc    Complain assign pick up route
 // @access  Private
-router.post("/setestimate", adminauth, [
-    check("id", "Complain id is required").not().isEmpty(),
-    check("estimate", "Estimate is required").not().isEmpty(),
-    check("estimate", "Valid estimation is required").isNumeric()
+router.post("/assignpickup", adminauth, [
+    check("cid", "Complain id is required").not().isEmpty(),
+    check("pid", "Employee id is required").not().isEmpty(),
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
     try {
-        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{estimate: req.body.estimate});
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.cid },{pickupuser: req.body.pid});
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Estimate assigned successfully!"});
+        status = true;
+        res.status(200).json({status,msg: "Pick up boy assigned successfully!"});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            return res.status(400).json({ msg: "Cannot assign Pick up boy!"}); 
+        }
+        res.status(500).send("Server Error");
+    }
+});
+
+// @route   POST api/complain/assigndelivery
+// @desc    Complain assign delivery boy route
+// @access  Private
+router.post("/assigndelivery", adminauth, [
+    check("cid", "Complain id is required").not().isEmpty(),
+    check("did", "Employee id is required").not().isEmpty(),
+], async (req,res) => {
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    console.log(req.body);
+    try {
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.cid },{deliveryuser: req.body.did, status: 3});
+        if(!complain){
+            return res.status(400).json({ msg: "Complain not found"});
+        }
+        status = true;
+        res.status(200).json({status,msg: "Delivery boy assigned successfully!"});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            return res.status(400).json({ msg: "Cannot assign Delivery boy!"}); 
+        }
+        res.status(500).send("Server Error");
+    }
+});
+
+
+// @route   POST api/complain/setestimate
+// @desc    Set estimation route
+// @access  Private
+router.post("/setestimate", servicemanauth, [
+    check("id", "Complain id is required").not().isEmpty(),
+    check("chklist", "Checklist is required").not().isEmpty(),
+    check("estimate", "Estimate is required").not().isEmpty()
+], async (req,res) => {
+    let status = false;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    console.log(req.body);
+    try {
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{estimate: req.body.estimate, chklist: req.body.chklist, status: 6});
+        if(!complain){
+            return res.status(400).json({ msg: "Complain not found"});
+        }
+        status = true;
+        res.status(200).json({status, msg: "Estimate assigned successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
             return res.status(400).json({ msg: "Something went wrong!"}); 
         }
-        res.status(500).send("Server Error");
+        res.status(500).json({msg: "Server Error"});
     }
 });
 
 // @route   POST api/complain/acceptservice
 // @desc    Service accept route
 // @access  Private
-router.post("/acceptservice", adminauth, [
+router.post("/acceptservice", customerauth, [
     check("id", "Complain id is required").not().isEmpty()
 ], async (req,res) => {
+    let status = false
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
     try {
-        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{status: "4"});
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{status: "7"});
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Service accepted successfully!"});
+        status = true;
+        res.status(200).json({status, msg: "Service accepted successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
             return res.status(400).json({ msg: "Something went wrong!"}); 
         }
-        res.status(500).send("Server Error");
+        res.status(500).json({msg: "Server Error"});
     }
 });
 
 // @route   POST api/complain/rejectservice
 // @desc    Service reject route
 // @access  Private
-router.post("/rejectservice", adminauth, [
+router.post("/rejectservice", customerauth, [
     check("id", "Complain id is required").not().isEmpty()
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
     }
     console.log(req.body);
     try {
-        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{status: "5"});
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{status: "8"});
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Service rejected successfully!"});
+        status = true;
+        res.status(200).json({status, msg: "Service rejected successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
             return res.status(400).json({ msg: "Something went wrong!"}); 
         }
-        res.status(500).send("Server Error");
+        res.status(500).json({msg: "Server Error"});
+    }
+});
+
+// @route   POST api/complain/startservice
+// @desc    Service start route
+// @access  Private
+router.post("/startservice", servicemanauth, [
+    check("id", "Complain id is required").not().isEmpty()
+], async (req,res) => {
+    let status = false
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    console.log(req.body);
+    try {
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{status: "9"});
+        if(!complain){
+            return res.status(400).json({ msg: "Complain not found"});
+        }
+        status = true;
+        res.status(200).json({status, msg: "Service started successfully!"});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            return res.status(400).json({ msg: "Something went wrong!"}); 
+        }
+        res.status(500).json({msg: "Server Error"});
+    }
+});
+
+// @route   POST api/complain/completeservice
+// @desc    Service completed route
+// @access  Private
+router.post("/completeservice", servicemanauth, [
+    check("id", "Complain id is required").not().isEmpty()
+], async (req,res) => {
+    let status = false
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()})
+    }
+    console.log(req.body);
+    try {
+        const complain = await Complain.findByIdAndUpdate({_id: req.body.id },{status: "10"});
+        if(!complain){
+            return res.status(400).json({ msg: "Complain not found"});
+        }
+        status = true;
+        res.status(200).json({status, msg: "Service Completed successfully!"});
+    } catch (err) {
+        console.error(err.message);
+        if(err.kind == "ObjectId"){
+            return res.status(400).json({ msg: "Something went wrong!"}); 
+        }
+        res.status(500).json({msg: "Server Error"});
     }
 });
 
 // @route   POST api/complain/updatestatus
 // @desc    Pick up and delivery status update route
 // @access  Private
-router.post("/updatestatus", adminauth, [
+router.post("/updatestatus", deliveryboyauth, [
     check("id", "Complain id is required").not().isEmpty(),
     check("status", "Status is not valid").isNumeric()
 ], async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -354,7 +515,8 @@ router.post("/updatestatus", adminauth, [
         if(!complain){
             return res.status(400).json({ msg: "Complain not found"});
         }
-        res.json({msg: "Status updated successfully!"});
+        status = true;
+        res.json({status, msg: "Status updated successfully!"});
     } catch (err) {
         console.error(err.message);
         if(err.kind == "ObjectId"){
@@ -382,6 +544,84 @@ router.post("/delete", customerauth, [
     } catch (err) {
         console.error(err.message);
         res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   GET api/complain/pickuprequests
+// @desc    Get all pick up requests
+// @access  Private
+router.get("/pickuprequests", deliveryboyauth, async (req, res)=>{
+    let status = false;
+    try {
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+             }
+            ]);
+        complains = complains.filter(row => (row.pickupuser == req.user.id));
+        complains = complains.filter(row => (row.status  >= 3 && row.status <= 5));
+        status = true;
+        res.status(200).json({status,complains});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// @route   GET api/complain/servicerequests
+// @desc    Get all service requests
+// @access  Private
+router.get("/servicerequests", servicemanauth, async (req, res)=>{
+    let status = false;
+    try {
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+             }
+            ]);
+        complains = complains.filter(row => (row.serviceman == req.user.id));
+        complains = complains.filter(row => (row.status  >= 5 && row.status <= 10));
+        status = true;
+        res.status(200).json({status,complains});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+// @route   GET api/complain/deliveryrequests
+// @desc    Get all delivery requests
+// @access  Private
+router.get("/deliveryrequests", deliveryboyauth, async (req, res)=>{
+    let status = false;
+    try {
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+             }
+            ]);
+        complains = complains.filter(row => (row.pickupuser == req.user.id));
+        complains = complains.filter(row => (row.status  >= 10));
+        status = true;
+        res.status(200).json({status,complains});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
     }
 });
 

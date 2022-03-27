@@ -47,7 +47,7 @@ const ComplainSchema = new mongoose.Schema({
         ref: "user",
         required: false
     },
-    details: {
+    chklist: {
         type: Object,
         required: false
     },

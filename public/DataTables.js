@@ -27,14 +27,24 @@ for(let i=0; i < userstatus.length; i++){
 
 // request status
 rstatus = document.getElementsByClassName("rstatus");
-btnaccept = document.getElementsByClassName("btn-accept");
-btnreject = document.getElementsByClassName("btn-reject");
+abtnaccept = document.getElementsByClassName("abtn-accept");
+abtnreject = document.getElementsByClassName("abtn-reject");
+cbtnaccept = document.getElementsByClassName("cbtn-accept");
+cbtnreject = document.getElementsByClassName("cbtn-reject");
+crbtndelete = document.getElementsByClassName("crbtn-delete");
+btnservice = document.getElementsByClassName("btn-service");
+btncomplete = document.getElementsByClassName("btn-complete");
 for(let i=0; i < rstatus.length; i++){
     if(rstatus[i].innerText == 0){ 
-        btnaccept[i].style.visibility = 'visible';
-        btnreject[i].style.visibility = 'visible';
         rstatus[i].classList.add("btn-warning");
-        rstatus[i].innerText = "Pending"
+        rstatus[i].innerText = "Pending";
+        try {
+            crbtndelete[i].style.visibility = 'visible';
+            abtnaccept[i].style.visibility = 'visible';
+            abtnreject[i].style.visibility = 'visible';
+        } catch (error) {
+            
+        }
     }
     else if(rstatus[i].innerText == 1){
         rstatus[i].classList.add("btn-success");
@@ -46,31 +56,47 @@ for(let i=0; i < rstatus.length; i++){
     }
     else if(rstatus[i].innerText == 3){
         rstatus[i].classList.add("btn-success");
-        rstatus[i].innerText = "Estimation pending"
+        rstatus[i].innerText = "Waiting for pickup"
     }
     else if(rstatus[i].innerText == 4){
         rstatus[i].classList.add("btn-success");
-        rstatus[i].innerText = "Service accepted"
+        rstatus[i].innerText = "Picked up"
     }
     else if(rstatus[i].innerText == 5){
-        rstatus[i].classList.add("btn-danger");
-        rstatus[i].innerText = "Service rejected"
+        rstatus[i].classList.add("btn-success");
+        rstatus[i].innerText = "Delivered to the company"
     }
     else if(rstatus[i].innerText == 6){
-        rstatus[i].classList.add("btn-success");
-        rstatus[i].innerText = "Waiting for pickup"
+        rstatus[i].classList.add("btn-warning");
+        rstatus[i].innerText = "price approval pending"
+        try {
+            cbtnaccept[i].style.visibility = 'visible';
+            cbtnreject[i].style.visibility = 'visible';
+        } catch (error) {
+            
+        }
     }
     else if(rstatus[i].innerText == 7){
         rstatus[i].classList.add("btn-success");
-        rstatus[i].innerText = "Picked up"
+        rstatus[i].innerText = "Service accepted"
+        try {
+            btnservice[i].style.visibility = 'visible';
+        } catch (error) {
+            
+        }
     }
     else if(rstatus[i].innerText == 8){
-        rstatus[i].classList.add("btn-success");
-        rstatus[i].innerText = "Received"
+        rstatus[i].classList.add("btn-danger");
+        rstatus[i].innerText = "Service Rejected"
     }
     else if(rstatus[i].innerText == 9){
         rstatus[i].classList.add("btn-success");
         rstatus[i].innerText = "In service"
+        try {
+            btncomplete[i].style.visibility = 'visible';
+        } catch (error) {
+            
+        }
     }
     else if(rstatus[i].innerText == 10){
         rstatus[i].classList.add("btn-success");
@@ -83,5 +109,13 @@ for(let i=0; i < rstatus.length; i++){
     else if(rstatus[i].innerText == 12){
         rstatus[i].classList.add("btn-success");
         rstatus[i].innerText = "Delivered"
+    }
+}
+
+// estimate button
+btnestimate = document.getElementsByClassName("btn-estimate");
+for(let i=0; i<btnestimate.length; i++){
+    if(btnestimate[i].id === "5"){
+        btnestimate[i].style.visibility = 'visible';
     }
 }

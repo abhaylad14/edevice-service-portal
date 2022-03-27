@@ -81,6 +81,7 @@ router.post("/employee", adminauth, [
     check("address", "Address is required").not().isEmpty(),
     check("type", "Employee type is required").not().isEmpty(),
 ],async (req,res) => {
+    let status = false;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors: errors.array()})
@@ -119,11 +120,12 @@ router.post("/employee", adminauth, [
     jwt.sign(payload, config.get('jwtSecret'), {expiresIn: 360000},
     (err) => {
         if(err) throw err;
-        res.json({msg: "Employee registered successfully!"});
+        status = true;
+        res.status(200).json({status, msg: "Employee registered successfully!"});
     })
     }catch(err){
         console.error(err);
-        res.status(500).send("Server error");
+        res.status(500).json({msg: "Server error"});
     }
 });
 
@@ -179,6 +181,21 @@ router.get("/serviceman", adminauth, async (req,res) => {
     let status = false;
     try {
         const data = await User.find({usertype:3}).select("-password");
+        status = true;
+        res.status(200).json({status,data});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({msg: "Server Error!"});
+    }
+});
+
+// @route   GET api/users/deliveryboys
+// @desc    Get the list of active deliveryboys
+// @access  Private
+router.get("/deliveryboys", adminauth, async (req,res) => {
+    let status = false;
+    try {
+        const data = await User.find({usertype:2}).select("-password");
         status = true;
         res.status(200).json({status,data});
     } catch (err) {

@@ -1,20 +1,30 @@
 import React from "react";
-import { Header } from "./Header";
+import { Sidebar } from "./Sidebar";
 import { Footer } from "./Footer";
 import { NavbarInner } from "./NavbarInner";
 
 const Dashboard = () => {
   return (
-    <div>
-      <Header />
-      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <NavbarInner />
-        <div className="container-fluid py-4">
-            <h1>Deliveryboy Dashboard</h1>
+    <>
+      <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
+        <NavbarInner title="Dashboard" />
+        <div className="app-main">
+          <Sidebar />
+          <div className="app-main__outer">
+          <div className="app-main__inner">
+            {/* Content Start */}
+            <div className="card">
+              <div className="card-body">
+                <h5>Delivery Boy Dashboard</h5>
+              </div>
+            </div>
+            {/* Content End */}
+          </div>
           <Footer />
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 

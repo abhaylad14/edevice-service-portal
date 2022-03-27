@@ -14,7 +14,7 @@ module.exports = async(req, res, next) => {
     try {
         const decoded = jwt.verify(token, config.get("jwtSecret"));
         req.user = decoded.user;
-        const user = await User.findById({_id: decoded.user.id, usertype: 2, status: 1});
+        const user = await User.findOne({_id: decoded.user.id, usertype: 2, status: 1});
         if(!user.usertype == 2) {
             return res.status(401).json({msg: "Invalid token, authorization denied!"});
         }

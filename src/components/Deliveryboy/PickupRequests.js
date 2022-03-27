@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Footer } from './Footer'
-import { NavbarInner } from './NavbarInner'
-import { Sidebar } from './Sidebar'
+import { Footer } from '../Footer';
+import { NavbarInner } from './NavbarInner';
+import { Sidebar } from './Sidebar';
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 
-const Request = () => {
-  const [ data, setData ] = useState([]);
-  const [ rdata, setRData ] = useState([]);
-  const [ chklist, setChklist ] = useState([]);
+const PickupRequests = () => {
+    const [ data, setData ] = useState([]);
+    const [ rdata, setRData ] = useState([]);
   useEffect(()=> {
     getData();
   },[]);
@@ -22,7 +21,7 @@ const Request = () => {
       }
       let token = await localStorage.getItem("x-auth-token");
       axios.defaults.headers.common["x-auth-token"] = token;
-      const res = await axios.get("http://localhost:5000/api/complain/mycomplains", "", config);
+      const res = await axios.get("http://localhost:5000/api/complain/pickuprequests", "", config);
       if(res.data.status === true){
         console.log(res.data.complains);
         setData(res.data.complains);
@@ -40,49 +39,6 @@ const Request = () => {
       alertify.error("Something went wrong!");
     }
   } 
-  const handleRequest = async(e) => {
-    //   console.log(e.target.id);
-    let id = e.target.name;
-    try {
-        const config = {
-            header:{
-              "Content-Type": "application/json",
-            }
-          }
-          let token = await localStorage.getItem("x-auth-token");
-          axios.defaults.headers.common["x-auth-token"] = token;
-          const complain = { id }
-          let url = "";
-          if(e.target.id === "1"){
-                url = "http://localhost:5000/api/complain/acceptservice";
-          }
-          else if(e.target.id === "2"){
-                url = "http://localhost:5000/api/complain/rejectservice";
-          }
-          console.log(url)
-          const res = await axios.post(url, complain, config);
-          if(res.data.status === true){
-            if(e.target.id === "1"){
-                e.target.parentElement.children[1].remove();
-                e.target.parentElement.children[0].remove();
-          }
-          else if(e.target.id === "2"){
-            e.target.parentElement.children[0].remove();
-            e.target.parentElement.children[0].remove();
-          }
-            alertify.success(res.data.msg)
-           
-            getData();
-          }
-          else{
-              console.log(res.data);
-              alertify.error("Error: Something went wrong!");
-          }
-    } catch (err) {
-        console.log(err);
-        alertify.error("Something went wrong!");
-    }
-  }
   const viewRequest = async(e) => {
     //   console.log(e.target.id);
     let id = e.target.name;
@@ -95,10 +51,9 @@ const Request = () => {
           }
           let token = await localStorage.getItem("x-auth-token");
           axios.defaults.headers.common["x-auth-token"] = token;
-          const res = await axios.post("http://localhost:5000/api/complain/viewrequest", cdata, config);
+          const res = await axios.post("http://localhost:5000/api/complain/getone", cdata, config);
           if(res.data.status === true){
-            setRData(res.data.complains);
-            setChklist(res.data.complains[0].chklist)
+            setRData(res.data.complains)
           }
           else{
               console.log(res.data);
@@ -109,30 +64,30 @@ const Request = () => {
         alertify.error("Something went wrong!");
     }
   }
-  const handleDelete = async(e) => {
-    let id = e.target.name;
-    console.log(id);
-    try{
-      const config = {
-        header:{
-          "Content-Type": "application/json"
-        }
-      }
-      let token = await localStorage.getItem("x-auth-token");
-      axios.defaults.headers.common["x-auth-token"] = token;
-      const request = { "id": id };
-      const res = await axios.post("http://localhost:5000/api/complain/delete", request, config);
-      if(res.data.status === true){
-        alertify.success(res.data.msg);
-        let newdata = data.filter(row => (row._id !== id ));
-        setData(newdata)
-      }
-      else{
+  const updateStatus = async(e) => {
+    let id = e.target.id;
+    let status = e.target.value;
+    const cdata = { id, status };
+    try {
+        const config = {
+            header:{
+              "Content-Type": "application/json",
+            }
+          }
+          let token = await localStorage.getItem("x-auth-token");
+          axios.defaults.headers.common["x-auth-token"] = token;
+          const res = await axios.post("http://localhost:5000/api/complain/updatestatus", cdata, config);
+          if(res.data.status === true){
+            alertify.success(res.data.msg);
+            getData();
+          }
+          else{
+              console.log(res.data);
+              alertify.error("Error: Something went wrong!");
+          }
+    } catch (err) {
+        console.log(err);
         alertify.error("Something went wrong!");
-      }
-    }
-    catch(err){
-      alertify.error(err.response.data['errors'][0].msg);
     }
   }
   return (
@@ -149,12 +104,10 @@ const Request = () => {
               <table className="table table-responsive-sm" id="myTable">
                 <thead className="table-primary">
                   <tr>
+                    <th scope="col">Customer</th>
                     <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Brand</th>
-                    <th scope="col">Model Name</th>
-                    <th scope="col">Model No.</th>
                     <th scope="col">Status</th>
+                    <th scope="col"></th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -162,17 +115,18 @@ const Request = () => {
                     {
                     data.map(row => (
                       <tr key={row._id}>
+                    <td>{row.userdetails[0].name}</td>
                     <td>{row.title}</td>
-                    <td>{row.desc}</td>
-                    <td>{row.brand}</td>
-                    <td>{row.modelname}</td>
-                    <td>{row.modelno}</td>
-                    <td className='rstatus badge mt-1'>{row.status}</td>
+                    <td ><button className='rstatus btn btn-sm'>{row.status}</button></td>
                     <td>
-                    <button style={{visibility: "hidden"}} onClick={e => handleDelete(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-trash-alt border-0 crbtn-delete"></button>
                     <button onClick={e => viewRequest(e)} name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 btn-edit"> View</button>
-                    <button style={{visibility: "hidden"}} id="1" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-success btn-sm fas fa-check border-0 cbtn-accept"> Accept</button>
-                    <button style={{visibility: "hidden"}} id="2" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-times border-0 cbtn-reject"> Reject</button>
+                    </td><td>
+                    <select id={row._id} value={row.status !== undefined ? row.status : ""} onChange={e => updateStatus(e)} className='form-control col-sm-8' name='sid'> 
+                    <option value="" disabled>--- Select ---</option>
+                    <option value="3">Waiting for pickup</option>
+                    <option value="4">Picked up</option>
+                    <option value="5">Delivered to the company</option>
+                    </select>
                     </td>
                     </tr>
                     ))}
@@ -200,15 +154,17 @@ const Request = () => {
             <table>
                 {rdata.map(x => (
                 <tbody key={x._id}>
+                  <tr><td><strong className='mr-2'>Customer Name: </strong></td><td>{x.userdetails[0].name}</td></tr>
+                  <tr><td><strong className='mr-2'>Mobile No: </strong></td><td>{x.userdetails[0].mobile}</td></tr>
+                  <tr><td><strong className='mr-2'>Pincode: </strong></td><td>{x.userdetails[0].pincode}</td></tr>
+                  <tr><td><strong className='mr-2'>Address: </strong></td><td>{x.userdetails[0].address}</td></tr>
                   <tr><td><strong className='mr-2'>Title: </strong></td><td>{x.title}</td></tr>
                   <tr><td><strong className='mr-2'>Description: </strong></td><td>{x.desc}</td></tr>
                   <tr><td><strong className='mr-2'>Brand: </strong></td><td>{x.brand}</td></tr>
                   <tr><td><strong className='mr-2'>Model Name: </strong></td><td>{x.modelname}</td></tr>
                   <tr><td><strong className='mr-2'>ModelNo: </strong></td><td>{x.modelno}</td></tr>
-                  {Object.entries(x.chklist).map(([k,v]) => (<tr><td><strong className='mr-2'>{k}: </strong></td><td>{v}</td></tr>))}
-                  <tr><td><h4 className='mr-2'>Total: </h4></td><td><h4>{x.estimate}</h4></td></tr>
                   </tbody>
-                 ))} 
+                ))}
             </table>
             </div>
             <div className="modal-footer">
@@ -221,4 +177,4 @@ const Request = () => {
   )
 }
 
-export default Request
+export default PickupRequests

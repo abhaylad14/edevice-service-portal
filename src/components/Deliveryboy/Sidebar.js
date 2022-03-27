@@ -49,59 +49,24 @@ export const Sidebar = () => {
               <ul className="vertical-nav-menu">
                 {/* <li className="app-sidebar__heading">Dashboards</li> */}
                 <li>
-                  <Link to="/admin/dashboard" className="mt-2"> 
+                  <Link to="/deliveryboy/dashboard" className="mt-2"> 
                   {/* mm-active */}
                     <i className="metismenu-icon pe-7s-rocket"></i>
                     Dashboard 
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/brands" className="mt-2">
-                    <i className="metismenu-icon fas fa-building"></i>
-                    Brands 
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/requests" className="mt-2">
+                  <Link to="/deliveryboy/pickuprequests" className="mt-2"> 
+                  {/* mm-active */}
                     <i className="metismenu-icon far fa-comment"></i>
-                    Requests 
+                    Pick up Requests 
                   </Link>
                 </li>
                 <li>
-                  <Link to="/admin/assignrequest" className="mt-2">
-                    <i className="metismenu-icon fas fa-comment"></i>
-                    Assign Request 
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/addemployee" className="mt-2">
-                    <i className="metismenu-icon fas fa-user-edit"></i>
-                    Add Employee 
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/feedbacks" className="mt-2">
-                    <i className="metismenu-icon far fa-comments"></i>
-                    Feedback
-                  </Link>
-                </li>
-                <li className="app-sidebar__heading">Users</li>
-                <li>
-                  <Link to="/admin/customers" className="mt-2">
-                    <i className="metismenu-icon fas fa-users"></i>
-                    Customers 
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/deliveryboys" className="mt-2">
-                    <i className="metismenu-icon fas fa-users"></i>
-                    Delivery Boys 
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/admin/servicemen" className="mt-2">
-                    <i className="metismenu-icon fas fa-users"></i>
-                    Servicemen 
+                  <Link to="/deliveryboy/deliveryrequests" className="mt-2"> 
+                  {/* mm-active */}
+                    <i className="metismenu-icon far fa-comment"></i>
+                    Delivery Requests 
                   </Link>
                 </li>
               </ul>
