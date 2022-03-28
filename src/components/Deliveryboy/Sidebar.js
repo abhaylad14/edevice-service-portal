@@ -69,6 +69,12 @@ export const Sidebar = () => {
                     Delivery Requests 
                   </Link>
                 </li>
+                <li>
+                  <Link to="/deliveryboy/profile" className="mt-2"> 
+                    <i className="metismenu-icon far fa-user"></i>
+                    Profile 
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

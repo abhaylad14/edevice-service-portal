@@ -1,6 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export const NavbarInner = (props) => {
+  let navigate = useNavigate();
+  const handleLogout = async(e) => {
+    localStorage.clear();
+    navigate("/login");
+  }
   return (
     <>
     <div className="app-header header-shadow">
@@ -11,8 +17,7 @@ export const NavbarInner = (props) => {
               <button
                 type="button"
                 className="hamburger close-sidebar-btn hamburger--elastic"
-                data-class="closed-sidebar"
-              >
+                data-class="closed-sidebar">
                 <span className="hamburger-box">
                   <span className="hamburger-inner"></span>
                 </span>
@@ -112,15 +117,16 @@ export const NavbarInner = (props) => {
                         <div tabIndex="-1" className="dropdown-divider"></div>
                         <button
                           type="button"
-                          tabIndex="0"
                           className="dropdown-item"
+                          onClick={() => { console.log("button clicked");}}
                         >
-                          Dividers
+                          Logout
                         </button>
                       </div>
                     </div>
                   </div>
                   <div className="widget-content-right header-user-info ml-3">
+                    <button className='btn btn-primary' onClick={(e) => handleLogout(e)} >Logout</button>
                   </div>
                 </div>
               </div>

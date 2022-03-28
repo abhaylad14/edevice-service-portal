@@ -36,6 +36,16 @@ import PickupRequests from './components/Deliveryboy/PickupRequests';
 import ServiceRequests from './components/Serviceman/ServiceRequests';
 import SetEstimate from './components/Serviceman/SetEstimate';
 import DeliveryRequests from './components/Deliveryboy/DeliveryRequests';
+import ReportComplain from './components/Admin/ReportComplain'
+import ReportCustomer from './components/Admin/ReportCustomer'
+import ReportDeliveryBoy from './components/Admin/ReportDeliveryBoy'
+import ReportServiceman from './components/Admin/ReportServiceman'
+import UserProfile from './components/User/Profile';
+import ServicemanProfile from './components/Serviceman/Profile';
+import DeliverymanProfile from './components/Deliveryboy/Profile';
+import ViewBills from './components/Admin/ViewBills';
+import ViewInvoice from './components/Admin/ViewInvoice';
+import ViewUserInvoice from './components/User/ViewInvoice';
 
 const App = () => {
   return (
@@ -61,23 +71,33 @@ const App = () => {
         <Route exact path='/admin/assignrequest' element={<AssignRequest />}/>
         <Route exact path='/admin/feedbacks' element={<Feedbacks />}/>
         <Route exact path='/admin/addemployee' element={<AddEmployee />}/>
+        <Route exact path='/admin/complainreport' element={<ReportComplain />}/>
+        <Route exact path='/admin/customerreport' element={<ReportCustomer />} />
+        <Route exact path='/admin/deliveryboyreport' element={<ReportDeliveryBoy />} />
+        <Route exact path='/admin/servicemanreport' element={<ReportServiceman />} />
+        <Route exact path='/admin/viewbills' element={<ViewBills />} />
+        <Route exact path='/admin/invoice' element={<ViewInvoice />} />
 
         {/* Users */}
         <Route exact path='/user/dashboard' element={<UserDashboard />}/>
         <Route exact path='/user/requests' element={<UserRequests />}/>
         <Route exact path='/user/addrequest' element={<AddRequest />}/>
         <Route exact path='/user/feedback' element={<Feedback />}/>
+        <Route exact path='/user/profile' element={<UserProfile />}/>
+        <Route exact path='/user/invoice' element={<ViewUserInvoice />}/>
 
         
         {/* Deliveryboy */}
         <Route exact path='/deliveryboy/dashboard' element={<DeliveryboyDashboard />}/>
         <Route exact path='/deliveryboy/pickuprequests' element={<PickupRequests />}/>
         <Route exact path='/deliveryboy/deliveryrequests' element={<DeliveryRequests />}/>
+        <Route exact path='/deliveryboy/profile' element={<DeliverymanProfile />}/>
 
         {/* Serviceman */}
         <Route exact path='/serviceman/dashboard' element={<ServicemanDashboard />}/>
         <Route exact path='/serviceman/servicerequests' element={<ServiceRequests />}/>
         <Route exact path='/serviceman/setestimate' element={<SetEstimate />}/>
+        <Route exact path='/serviceman/profile' element={<ServicemanProfile />}/>
         
 
     </Routes>

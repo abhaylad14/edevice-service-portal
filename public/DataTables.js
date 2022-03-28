@@ -1,5 +1,39 @@
 $("#myTable").DataTable();
 
+$('#report').DataTable( {
+    dom: 'Bfrtip',
+    buttons: [
+        'copy', 'csv', 'excel', 'pdf', 'print'
+    ]
+} );
+
+// $('#bill').DataTable( {
+//     "bPaginate": false,
+//     buttons: [
+//         'copy', 'csv', 'excel', 'pdf', 'print'
+//     ]
+// } );
+
+document.getElementById("downloadpdf")
+        .addEventListener("click", () => {
+            const invoice = document.getElementById("invoice");
+            console.log(invoice);
+            var opt = {
+                margin: 1,
+                filename: 'E-Serve_Bill.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().from(invoice).set(opt).save();
+        })
+
+dtbuttons = document.getElementsByClassName("dt-button")
+for(let i=0; i < dtbuttons.length; i++){
+    dtbuttons[i].classList.add("btn");
+    dtbuttons[i].classList.add("btn-primary");
+}
+
 $(".btn-edit").click(function(){
     $('#editModal').modal('toggle');
 });
@@ -34,6 +68,7 @@ cbtnreject = document.getElementsByClassName("cbtn-reject");
 crbtndelete = document.getElementsByClassName("crbtn-delete");
 btnservice = document.getElementsByClassName("btn-service");
 btncomplete = document.getElementsByClassName("btn-complete");
+viewbill = document.getElementsByClassName("viewbill");
 for(let i=0; i < rstatus.length; i++){
     if(rstatus[i].innerText == 0){ 
         rstatus[i].classList.add("btn-warning");
@@ -109,6 +144,11 @@ for(let i=0; i < rstatus.length; i++){
     else if(rstatus[i].innerText == 12){
         rstatus[i].classList.add("btn-success");
         rstatus[i].innerText = "Delivered"
+        try {
+            viewbill[i].style.visibility = 'visible';
+        } catch (error) {
+            
+        }
     }
 }
 

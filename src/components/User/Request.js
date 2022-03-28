@@ -5,11 +5,13 @@ import { Sidebar } from './Sidebar'
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { useNavigate } from 'react-router-dom'
 
 const Request = () => {
+  let navigate = useNavigate();
   const [ data, setData ] = useState([]);
   const [ rdata, setRData ] = useState([]);
-  const [ chklist, setChklist ] = useState([]);
+  // const [ chklist, setChklist ] = useState([]);
   useEffect(()=> {
     getData();
   },[]);
@@ -98,7 +100,7 @@ const Request = () => {
           const res = await axios.post("http://localhost:5000/api/complain/viewrequest", cdata, config);
           if(res.data.status === true){
             setRData(res.data.complains);
-            setChklist(res.data.complains[0].chklist)
+            // setChklist(res.data.complains[0].chklist)
           }
           else{
               console.log(res.data);
@@ -135,6 +137,10 @@ const Request = () => {
       alertify.error(err.response.data['errors'][0].msg);
     }
   }
+  const ViewInvoice = async(e) => {
+    let id = e.target.name;
+    navigate(`/user/invoice?id=${id}`);
+}
   return (
     <>
     <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">
@@ -173,6 +179,9 @@ const Request = () => {
                     <button onClick={e => viewRequest(e)} name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 btn-edit"> View</button>
                     <button style={{visibility: "hidden"}} id="1" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-success btn-sm fas fa-check border-0 cbtn-accept"> Accept</button>
                     <button style={{visibility: "hidden"}} id="2" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-times border-0 cbtn-reject"> Reject</button>
+                    
+                    <button onClick={e => ViewInvoice(e)} name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 viewbill"> View invoice</button>
+                    
                     </td>
                     </tr>
                     ))}

@@ -62,6 +62,12 @@ export const Sidebar = () => {
                     Service Requests 
                   </Link>
                 </li>
+                <li>
+                  <Link to="/serviceman/profile" className="mt-2"> 
+                    <i className="metismenu-icon far fa-user"></i>
+                    Profile 
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

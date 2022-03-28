@@ -2,6 +2,7 @@ const express = require("express");
 const Complain = require("../../models/Complain");
 const router = express.Router();
 const adminauth = require("../../middleware/adminauth");
+const auth = require("../../middleware/auth");
 const customerauth = require("../../middleware/customerauth");
 const deliveryboy = require("../../middleware/deliveryboyauth");
 const servicemanauth = require("../../middleware/servicemanauth");
@@ -81,6 +82,31 @@ router.get("/", adminauth, async (req, res)=>{
     }
 });
 
+// @route   GET api/complain/bills
+// @desc    Get all complains for bills
+// @access  Private
+router.get("/bills", adminauth, async (req, res)=>{
+    let status = false;
+    try {
+        let complains = await Complain.aggregate([
+            { $lookup:
+               {
+                 from: 'users',
+                 localField: 'user',
+                 foreignField: '_id',
+                 as: 'userdetails'
+               },
+             }
+            ]);
+        status = true;
+        complains = complains.filter(row => (row.status >= 7));
+        res.status(200).json({status,complains});
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 // @route   GET api/complain/accepted
 // @desc    Get all accepted complains
 // @access  Private
@@ -138,7 +164,7 @@ router.get("/mycomplains", customerauth, [
 // @route   GET api/complain/getone
 // @desc    Get complain by complain id (delivery boy side)
 // @access  Private
-router.post("/getone", deliveryboyauth, [
+router.post("/getone", auth, [
     check("id", "Request ID is required").not().isEmpty(),
 ], async (req, res)=>{
     let status = false;

@@ -72,7 +72,8 @@ router.post("/", [
         if(err) throw err;
         status = true;
         let userType = user.usertype;
-        res.json({status,token,userType});
+        console.log(user);
+        res.status(200).json({status,token,userType});
     })
     }
     else if(user.status == 2){
@@ -104,7 +105,7 @@ router.post("/", [
     }
 });
 
-// @route   POST api/adminauth/forgotpassword
+// @route   POST api/auth/forgotpassword
 // @desc    Forgot password route
 // @access  Public
 router.post("/forgotpassword",[
@@ -131,7 +132,7 @@ router.post("/forgotpassword",[
         // Create reset url
         // const resetUrl = `${req.protocol}://${req.get('host')}/api/auth/resetpassword/${resetToken}`;
         const resetUrl = `http://localhost:3000/resetpassword?q=${resetToken}`;
-        const message = `You are receiving this email because you ( or someone else ) has requested of a reset password. Please make a put request to: \n\n ${resetUrl}`;
+        const message = `You are receiving this email because you ( or someone else ) has requested of a reset/change password. Please make a put request to: \n\n ${resetUrl}`;
         try {
              await sendEmail({
                  email: user.email,

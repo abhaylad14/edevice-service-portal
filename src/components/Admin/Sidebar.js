@@ -80,6 +80,37 @@ export const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/admin/viewbills" className="mt-2">
+                    <i className="metismenu-icon fas fa-file-invoice-dollar"></i>
+                    View Bills 
+                  </Link>
+                </li>
+                <li className="app-sidebar__heading">Reports</li>
+                <li>
+                  <Link to="/admin/complainreport" className="mt-2">
+                    <i className="metismenu-icon fas fa-table"></i>
+                    Complain Report
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/customerreport" className="mt-2">
+                    <i className="metismenu-icon fas fa-table"></i>
+                    Customer Report
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/deliveryboyreport" className="mt-2">
+                    <i className="metismenu-icon fas fa-table"></i>
+                    Deliveryboy Report
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/servicemanreport" className="mt-2">
+                    <i className="metismenu-icon fas fa-table"></i>
+                    Serviceman Report
+                  </Link>
+                </li>
+                <li>
                   <Link to="/admin/feedbacks" className="mt-2">
                     <i className="metismenu-icon far fa-comments"></i>
                     Feedback
