@@ -47,9 +47,13 @@ import ViewBills from './components/Admin/ViewBills';
 import ViewInvoice from './components/Admin/ViewInvoice';
 import ViewUserInvoice from './components/User/ViewInvoice';
 
+
+import UserState from "./context/user/UserState"
+
 const App = () => {
   return (
     <Provider store={store}>
+      <UserState>
     <BrowserRouter>
     <>
     <Alert />
@@ -103,6 +107,7 @@ const App = () => {
     </Routes>
     </>
     </BrowserRouter>
+    </UserState>
     </Provider>
   );
 }

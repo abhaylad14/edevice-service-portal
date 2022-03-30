@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Footer } from '../Footer';
 import { NavbarInner } from './NavbarInner';
 import { Sidebar } from './Sidebar';
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { VerifyAdmin, VerifyToken } from '../Authguard';
 
 const AddEmployee = () => {
     const [formData, setFormData] = useState({
@@ -17,6 +18,11 @@ const AddEmployee = () => {
         address: "",
         type: ""
       });
+
+      useEffect(()=> {
+        VerifyToken();
+        VerifyAdmin();
+      },[]);
     
       const { name, email, pass1, pass2, mobile, pincode, address, type } = formData;
     

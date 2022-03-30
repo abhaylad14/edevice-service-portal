@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Footer } from '../Footer';
 import { NavbarInner } from './NavbarInner';
 import { Sidebar } from './Sidebar';
@@ -6,9 +6,14 @@ import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { useNavigate } from 'react-router-dom';
+import { VerifyServiceMan, VerifyToken } from '../Authguard';
 
 const SetEstimate = () => {
   let navigate = useNavigate();
+  useEffect(()=> {
+    VerifyToken();
+    VerifyServiceMan();
+  },[]);
     const handleSubmit = async(e) => {
         e.preventDefault();
         let chklist = {};

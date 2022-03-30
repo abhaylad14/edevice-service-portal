@@ -1,6 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
+import userContext from '../../context/user/userContext'
 
 export const NavbarInner = (props) => {
+  const user = useContext(userContext);
+  let navigate = useNavigate();
+  const handleLogout = async(e) => {
+    localStorage.clear();
+    navigate("/login");
+  }
   return (
     <>
     <div className="app-header header-shadow">
@@ -11,8 +19,7 @@ export const NavbarInner = (props) => {
               <button
                 type="button"
                 className="hamburger close-sidebar-btn hamburger--elastic"
-                data-class="closed-sidebar"
-              >
+                data-class="closed-sidebar">
                 <span className="hamburger-box">
                   <span className="hamburger-inner"></span>
                 </span>
@@ -63,7 +70,7 @@ export const NavbarInner = (props) => {
                 <div className="widget-content-wrapper">
                   
                   <div className="widget-content-left ml-3 header-user-info mx-2">
-                    <div className="widget-heading">Admin</div>
+                    <div className="widget-heading">{user.state.name}</div>
                   </div>
                   <div className="widget-content-left">
                     <div className="btn-group">
@@ -112,15 +119,16 @@ export const NavbarInner = (props) => {
                         <div tabIndex="-1" className="dropdown-divider"></div>
                         <button
                           type="button"
-                          tabIndex="0"
                           className="dropdown-item"
+                          onClick={() => { console.log("button clicked");}}
                         >
-                          Dividers
+                          Logout
                         </button>
                       </div>
                     </div>
                   </div>
                   <div className="widget-content-right header-user-info ml-3">
+                  <button className='btn btn-primary' onClick={(e) => handleLogout(e)} >Logout</button>
                   </div>
                 </div>
               </div>

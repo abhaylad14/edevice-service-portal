@@ -6,6 +6,7 @@ import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { useNavigate } from 'react-router-dom'
+import { VerifyCustomer, VerifyToken } from '../Authguard'
 
 const Request = () => {
   let navigate = useNavigate();
@@ -13,6 +14,8 @@ const Request = () => {
   const [ rdata, setRData ] = useState([]);
   // const [ chklist, setChklist ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyCustomer();
     getData();
   },[]);
   const getData = async() => {

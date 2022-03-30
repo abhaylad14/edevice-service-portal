@@ -5,11 +5,14 @@ import { Sidebar } from './Sidebar';
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { VerifyDeliveryBoy, VerifyToken } from '../Authguard';
 
 const PickupRequests = () => {
     const [ data, setData ] = useState([]);
     const [ rdata, setRData ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyDeliveryBoy();
     getData();
   },[]);
   const getData = async() => {

@@ -31,7 +31,7 @@ export const Footer = () => {
                       <a target="_blank" href="https://abhaylad14.github.io/abhay-lad-portfolio/" className="nav-link">
                         <div className="badge badge-success mr-1 ml-0">
                         </div>
-                        Made by: Abhay Lad
+                        Made by: Abhay Priya Shrey
                       </a>
                     </li>
                   </ul>

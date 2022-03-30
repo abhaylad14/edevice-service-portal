@@ -5,6 +5,7 @@ import { Sidebar } from "./Sidebar";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 import axios from "axios";
+import { VerifyAdmin, VerifyToken } from "../Authguard";
 
 const Brands = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ const Brands = () => {
   const { name } = formData;
   const [ data, setData ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyAdmin();
     getData();
   },[]);
   const getData = async() => {

@@ -32,6 +32,7 @@ const Login = () => {
       if(res.data.status === true){
         localStorage.setItem("x-auth-token", res.data.token);
         let userType = res.data.userType;
+        localStorage.setItem("userType", userType);
         if(userType === 0){
           alertify.success("Login success: Welcome Admin");
           navigate("/admin/dashboard");

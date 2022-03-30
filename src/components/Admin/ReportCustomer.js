@@ -5,10 +5,13 @@ import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { NavbarInner } from "./NavbarInner";
+import { VerifyAdmin, VerifyToken } from "../Authguard";
 
 const ReportCustomer = () => {
   const [ data, setData ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyAdmin();
     getData();
   },[]);
   const getData = async() => {
@@ -53,7 +56,7 @@ const ReportCustomer = () => {
             {/* Content Start */}
             <div className="card">
               <div className="card-body">
-              <table className="table table-responsive-sm" id="myTable">
+              <table className="table table-responsive-sm" id="report">
                 <thead className="table-primary">
                   <tr>
                     <th scope="col">Name</th>

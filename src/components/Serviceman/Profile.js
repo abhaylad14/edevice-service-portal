@@ -5,6 +5,7 @@ import { Sidebar } from "./Sidebar";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 import axios from "axios";
+import { VerifyServiceMan, VerifyToken } from "../Authguard";
 
 const Profile = () => {
     const [email, setEmail] = useState()
@@ -18,6 +19,8 @@ const Profile = () => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
   useEffect(()=> {
+    VerifyToken();
+    VerifyServiceMan();
     getData();
   },[]);
   const getData = async() => {

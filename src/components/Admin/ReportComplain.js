@@ -5,16 +5,15 @@ import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { NavbarInner } from "./NavbarInner";
+import { VerifyAdmin, VerifyToken } from "../Authguard";
 // import { useNavigate } from "react-router-dom";
 
 const ReportComplain = () => {
   // let navigate = useNavigate();
   const [ data, setData ] = useState([]);
   useEffect(()=> {
-  //   if(!localStorage.getItem('x-auth-token')){
-  //     navigate("/login")
-  //     return 
-  // }
+    VerifyToken();
+    VerifyAdmin();
     getData();
   },[]);
   const getData = async() => {

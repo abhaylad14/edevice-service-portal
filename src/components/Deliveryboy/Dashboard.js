@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Sidebar } from "./Sidebar";
 import { Footer } from "./Footer";
 import { NavbarInner } from "./NavbarInner";
+import { VerifyDeliveryBoy, VerifyToken } from "../Authguard";
 
 const Dashboard = () => {
+  useEffect(()=> {
+    VerifyToken();
+    VerifyDeliveryBoy();
+  },[]);
   return (
     <>
       <div className="app-container app-theme-white body-tabs-shadow fixed-sidebar fixed-header">

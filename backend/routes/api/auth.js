@@ -72,8 +72,9 @@ router.post("/", [
         if(err) throw err;
         status = true;
         let userType = user.usertype;
+        let userName = user.name;
         console.log(user);
-        res.status(200).json({status,token,userType});
+        res.status(200).json({status,token,userType,userName});
     })
     }
     else if(user.status == 2){

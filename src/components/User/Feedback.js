@@ -5,8 +5,13 @@ import { Sidebar } from "./Sidebar";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 import axios from "axios";
+import { VerifyCustomer, VerifyToken } from "../Authguard";
 
 const Feedback = () => {
+  useEffect(()=> {
+    VerifyToken();
+    VerifyCustomer();
+  },[]);
   const [formData, setFormData] = useState({
     title: "",
     desc: "",

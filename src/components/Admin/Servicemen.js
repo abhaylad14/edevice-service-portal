@@ -5,10 +5,13 @@ import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { NavbarInner } from "./NavbarInner";
+import { VerifyAdmin, VerifyToken } from "../Authguard";
 
 const Servicemen = () => {
   const [ data, setData ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyAdmin();
     getData();
   },[]);
   const getData = async() => {

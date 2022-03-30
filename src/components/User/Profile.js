@@ -5,9 +5,14 @@ import { Sidebar } from "./Sidebar";
 import alertify from "alertifyjs";
 import "alertifyjs/build/css/alertify.css";
 import axios from "axios";
+import { VerifyCustomer, VerifyToken } from "../Authguard";
 
 const Profile = () => {
     const [email, setEmail] = useState()
+    useEffect(()=> {
+      VerifyToken();
+      VerifyCustomer();
+    },[]);
   const [formData, setFormData] = useState({
     name: "",
     mobile: "",

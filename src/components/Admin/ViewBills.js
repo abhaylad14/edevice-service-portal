@@ -6,11 +6,14 @@ import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
 import { useNavigate } from 'react-router-dom';
+import { VerifyAdmin, VerifyToken } from '../Authguard';
 
 const ViewBills = () => {
     let navigate = useNavigate();
     const [ data, setData ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyAdmin();
     getData();
   },[]);
   const getData = async() => {

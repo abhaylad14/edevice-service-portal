@@ -14,19 +14,26 @@ $('#report').DataTable( {
 //     ]
 // } );
 
-document.getElementById("downloadpdf")
-        .addEventListener("click", () => {
-            const invoice = document.getElementById("invoice");
-            console.log(invoice);
-            var opt = {
-                margin: 1,
-                filename: 'E-Serve_Bill.pdf',
-                image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().from(invoice).set(opt).save();
-        })
+
+try{
+    document.getElementById("downloadpdf")
+    .addEventListener("click", () => {
+        const invoice = document.getElementById("invoice");
+        console.log(invoice);
+        var opt = {
+            margin: 1,
+            filename: 'E-Serve_Bill.pdf',
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().from(invoice).set(opt).save();
+    })
+}
+catch(error){
+
+}
+        
 
 dtbuttons = document.getElementsByClassName("dt-button")
 for(let i=0; i < dtbuttons.length; i++){

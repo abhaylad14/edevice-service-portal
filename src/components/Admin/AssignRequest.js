@@ -5,12 +5,15 @@ import { Sidebar } from './Sidebar';
 import axios from 'axios'
 import alertify from 'alertifyjs'
 import 'alertifyjs/build/css/alertify.css';
+import { VerifyAdmin, VerifyToken } from '../Authguard';
 
 const AssignRequest = () => {
     const [ smen, setSmen ] = useState([]);
     const [ dboys, setDboys ] = useState([]);
     const [ data, setData ] = useState([]);
   useEffect(()=> {
+    VerifyToken();
+    VerifyAdmin();
     getData();
     getserviceman();
     getdeliveryboys();
