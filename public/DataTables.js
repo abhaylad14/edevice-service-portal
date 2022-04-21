@@ -81,9 +81,9 @@ for(let i=0; i < rstatus.length; i++){
         rstatus[i].classList.add("btn-warning");
         rstatus[i].innerText = "Pending";
         try {
-            crbtndelete[i].style.visibility = 'visible';
             abtnaccept[i].style.visibility = 'visible';
             abtnreject[i].style.visibility = 'visible';
+            crbtndelete[i].style.visibility = 'visible';    
         } catch (error) {
             
         }
@@ -154,7 +154,7 @@ for(let i=0; i < rstatus.length; i++){
         try {
             viewbill[i].style.visibility = 'visible';
         } catch (error) {
-            
+                
         }
     }
 }
