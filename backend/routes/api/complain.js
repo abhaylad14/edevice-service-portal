@@ -642,7 +642,7 @@ router.get("/deliveryrequests", deliveryboyauth, async (req, res)=>{
              }
             ]);
         complains = complains.filter(row => (row.pickupuser == req.user.id));
-        complains = complains.filter(row => (row.status  >= 10));
+        complains = complains.filter(row => (row.status  >= 10 && row.status < 12));
         status = true;
         res.status(200).json({status,complains});
     } catch (err) {

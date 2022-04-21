@@ -35,13 +35,9 @@ const Profile = () => {
       const res = await axios.get("http://localhost:5000/api/profile/me", "",config);
       if(res.data.status === true){
         console.log(res.data.profile);
-        // document.getElementById("name").value = res.data.profile.name;
         setFormData({name: res.data.profile.name, mobile: res.data.profile.mobile, pincode: res.data.profile.pincode, address: res.data.profile.address})
         document.getElementById("email").value = res.data.profile.email;
         setEmail(res.data.profile.email);
-        // document.getElementById("mobile").value = res.data.profile.mobile;
-        // document.getElementById("pincode").value = res.data.profile.pincode;
-        // document.getElementById("address").value = res.data.profile.address;
       }
       else{
           console.log(res.data);

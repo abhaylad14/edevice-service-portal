@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
@@ -13,6 +13,9 @@ const Login = () => {
     email: "",
     password: ""
   });
+  useEffect(()=> {
+    redirection();
+  },[]);
   const { email, password } = formData;
   const onChange = e => setFormData({...formData, [e.target.name]: e.target.value})
   const handleSubmit = async (e) => {
@@ -65,6 +68,36 @@ const Login = () => {
     } catch (err) {
       alertify.error(err.response.data['errors'][0].msg);
       // console.log(err.response.data['errors'][0].status);
+    }
+  }
+
+  const redirection = () => {
+    try{
+      if(localStorage.getItem("x-auth-token") && localStorage.getItem("userType")){
+        let userType = localStorage.getItem("userType");
+        if(userType === "0"){
+          alertify.success("Login success: Welcome Admin");
+          navigate("/admin/dashboard");
+        }
+        else if(userType === "1"){
+          alertify.success("Login success: Welcome Customer");
+          navigate("/user/dashboard");
+        }
+        else if(userType === "2"){
+          alertify.success("Login success: Welcome Delivery boy");
+          navigate("/deliveryboy/dashboard");
+        }
+        else if(userType === "3"){
+          alertify.success("Login success: Welcome Service man");
+          navigate("/serviceman/dashboard");
+        }
+        else{
+          alertify.error("Error: Something went wrong!");
+        }
+      }
+    }
+    catch{
+      navigate("/login");
     }
   }
 

@@ -1,6 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
+import alertify from "alertifyjs";
+import "alertifyjs/build/css/alertify.css";
+import axios from "axios";
+import userContext from "../../context/user/userContext";
 import { useNavigate } from 'react-router-dom';
-import userContext from '../../context/user/userContext'
 
 export const NavbarInner = (props) => {
   const user = useContext(userContext);
@@ -9,6 +12,33 @@ export const NavbarInner = (props) => {
     localStorage.clear();
     navigate("/login");
   }
+    useEffect(()=> {
+      setdata();
+    },[]);
+    const setdata = async() => {
+      try{
+        let token = await localStorage.getItem("x-auth-token");
+        axios.defaults.headers.common["x-auth-token"] = token;
+        const config = {
+          header:{
+            "Content-Type": "application/json",
+          }
+        }
+        const res = await axios.get("http://localhost:5000/api/profile/me", "",config);
+        if(res.data.status === true){
+          console.log(res.data.profile);
+          user.update(res.data.profile)
+        }
+        else{
+            console.log(res.data);
+            alertify.error("Error: Something went wrong!");
+        }
+      }
+      catch(err){
+          console.log(err)
+        alertify.error("Something went wrong!");
+      }
+    }
   return (
     <>
     <div className="app-header header-shadow">
@@ -86,45 +116,7 @@ export const NavbarInner = (props) => {
                           src={process.env.PUBLIC_URL + '/user.png'}
                           alt="Error"
                         />
-                        <i className="fa fa-angle-down ml-2 opacity-8"></i>
                       </span> 
-                      <div
-                        tabIndex="-1"
-                        role="menu"
-                        aria-hidden="true"
-                        className="dropdown-menu dropdown-menu-right"
-                      >
-                        <button
-                          type="button"
-                          tabIndex="0"
-                          className="dropdown-item"
-                        >
-                          User Account
-                        </button>
-                        <button
-                          type="button"
-                          tabIndex="0"
-                          className="dropdown-item"
-                        >
-                          Settings
-                        </button>
-                        <h6 tabIndex="-1" className="dropdown-header">Header</h6>
-                        <button
-                          type="button"
-                          tabIndex="0"
-                          className="dropdown-item"
-                        >
-                          Actions
-                        </button>
-                        <div tabIndex="-1" className="dropdown-divider"></div>
-                        <button
-                          type="button"
-                          className="dropdown-item"
-                          onClick={() => { console.log("button clicked");}}
-                        >
-                          Logout
-                        </button>
-                      </div>
                     </div>
                   </div>
                   <div className="widget-content-right header-user-info ml-3">

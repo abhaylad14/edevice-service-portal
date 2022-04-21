@@ -176,14 +176,14 @@ const Request = () => {
                     <td>{row.brand}</td>
                     <td>{row.modelname}</td>
                     <td>{row.modelno}</td>
-                    <td className='rstatus badge mt-1'>{row.status}</td>
+                    <td className='rstatus badge mt-2'>{row.status}</td>
                     <td>
                     <button style={{visibility: "hidden"}} onClick={e => handleDelete(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-trash-alt border-0 crbtn-delete"></button>
                     <button onClick={e => viewRequest(e)} name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 btn-edit"> View</button>
                     <button style={{visibility: "hidden"}} id="1" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-success btn-sm fas fa-check border-0 cbtn-accept"> Accept</button>
                     <button style={{visibility: "hidden"}} id="2" onClick={e => handleRequest(e)} name={row._id} className="btn btn-outline-danger btn-sm fas fa-times border-0 cbtn-reject"> Reject</button>
                     
-                    <button onClick={e => ViewInvoice(e)} name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 viewbill"> View invoice</button>
+                    <button style={{visibility: "hidden"}} onClick={e => ViewInvoice(e)} name={row._id} className="btn btn-outline-info btn-sm fas fa-eye border-0 viewbill"> View invoice</button>
                     
                     </td>
                     </tr>

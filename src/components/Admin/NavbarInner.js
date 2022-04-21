@@ -84,45 +84,7 @@ export const NavbarInner = (props) => {
                           src={process.env.PUBLIC_URL + '/user.png'}
                           alt="error"
                         />
-                        <i className="fa fa-angle-down ml-2 opacity-8"></i>
                       </span>
-                      <div
-                        tabIndex="-1"
-                        role="menu"
-                        aria-hidden="true"
-                        className="dropdown-menu dropdown-menu-right"
-                      >
-                        <button
-                          type="button"
-                          tabIndex="0"
-                          className="dropdown-item"
-                        >
-                          User Account
-                        </button>
-                        <button
-                          type="button"
-                          tabIndex="0"
-                          className="dropdown-item"
-                        >
-                          Settings
-                        </button>
-                        <h6 tabIndex="-1" className="dropdown-header">Header</h6>
-                        <button
-                          type="button"
-                          tabIndex="0"
-                          className="dropdown-item"
-                        >
-                          Actions
-                        </button>
-                        <div tabIndex="-1" className="dropdown-divider"></div>
-                        <button
-                          type="button"
-                          className="dropdown-item"
-                          onClick={() => { console.log("button clicked");}}
-                        >
-                          Logout
-                        </button>
-                      </div>
                     </div>
                   </div>
                   <div className="widget-content-right header-user-info ml-3">
